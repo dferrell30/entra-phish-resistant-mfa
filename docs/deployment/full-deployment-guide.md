@@ -26,6 +26,7 @@ Check version:
 
 ```powershell
 $PSVersionTable.PSVersion
+```
 
 You should see version 7.x or higher.
 
