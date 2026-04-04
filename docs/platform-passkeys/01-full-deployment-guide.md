@@ -333,6 +333,9 @@ Users can also:
 
 ---
 
+<details>
+<summary><strong>Click to expand</strong></summary>
+    
 ## 💻 Option B — Windows Hello for Business (Optional)
 
 This provides **device-based passkeys** on Windows systems.
@@ -372,6 +375,8 @@ This provides **device-based passkeys** on Windows systems.
 - User can sign in using Windows Hello
 - Passkey authentication works without phone
 - Provides fallback if mobile device is unavailable
+
+</details>
 
 ---
 
