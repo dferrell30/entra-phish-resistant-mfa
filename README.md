@@ -4,6 +4,7 @@
 
 [![Microsoft Entra](https://img.shields.io/badge/Microsoft-Entra-blue)](./docs/deployment/01-full-deployment-guide.md)
 [![Auth](https://img.shields.io/badge/Auth-FIDO2%20%7C%20YubiKey-green)](./docs/deployment/01-full-deployment-guide.md)
+[![Passwordless](https://img.shields.io/badge/Auth-Passkeys%20%7C%20Passwordless-blueviolet)](./docs/platform-passkeys/01-full-deployment-guide.md)
 [![Security](https://img.shields.io/badge/Security-Phishing--Resistant-purple)](./docs/policies/ca-privileged-phish-resistant.md)
 [![Status](https://img.shields.io/badge/Status-Lab%20to%20Production-orange)](./docs/deployment/01-full-deployment-guide.md)
 
@@ -11,9 +12,18 @@
 
 > 🚀 **Start here:** [Full Deployment Guide](./docs/deployment/01-full-deployment-guide.md)  
 > 📋 [Prerequisites](./docs/deployment/02-prerequisites.md)  
-> 🔑 [YubiKey Enrollment](./docs/deployment/03-yubikey-enrollment.md)
+> 🔑 [YubiKey Enrollment](./docs/deployment/03-yubikey-enrollment.md)  
+> 📱 [Passkey Deployment Guide](./docs/platform-passkeys/01-full-deployment-guide.md)
 
-A deployment and operations playbook for implementing phishing-resistant MFA in Microsoft Entra ID using YubiKeys, Conditional Access, break-glass protections, and a controlled lab-to-production rollout path.
+---
+
+A deployment and operations playbook for implementing **phishing-resistant authentication** in Microsoft Entra ID using:
+
+- YubiKeys (hardware FIDO2)
+- Platform passkeys (Microsoft Authenticator & Windows Hello)
+- Conditional Access
+- Break-glass protections
+- Lab-to-production rollout strategy
 
 ---
 
@@ -21,13 +31,90 @@ A deployment and operations playbook for implementing phishing-resistant MFA in 
 
 | Section | Link |
 |---|---|
-| 🚀 Deployment Guide | [01-full-deployment-guide.md](./docs/deployment/01-full-deployment-guide.md) |
-| 📋 Prerequisites | [02-prerequisites.md](./docs/deployment/02-prerequisites.md) |
-| 🔑 Enrollment | [03-yubikey-enrollment.md](./docs/deployment/03-yubikey-enrollment.md) |
+| 🚀 Deployment Guide | [Full Deployment Guide](./docs/deployment/01-full-deployment-guide.md) |
+| 📋 Prerequisites | [Prerequisites](./docs/deployment/02-prerequisites.md) |
+| 🔑 Enrollment | [YubiKey Enrollment](./docs/deployment/03-yubikey-enrollment.md) |
+| 📱 Passkey Deployment | [Passkeys](./docs/platform-passkeys/01-full-deployment-guide.md) |
 | 🛡️ Policies | [Policies](./docs/policies/) |
 | 🧰 Operations | [Operations](./docs/operations/) |
 | ✅ Validation | [Validation](./docs/validation/) |
 | ⚙️ Scripts | [Scripts](./scripts/) |
+
+---
+
+## 🎯 Purpose
+
+This repository provides a complete deployment, validation, and operational playbook for implementing **phishing-resistant authentication** in Microsoft Entra ID.
+
+It includes:
+
+- Hardware-backed MFA (YubiKey)
+- Platform passkeys (Microsoft Authenticator & Windows Hello)
+- Conditional Access enforcement
+- Recovery and operational lifecycle
+
+---
+
+## 🔐 Authentication Tracks
+
+This repository includes two complementary authentication approaches.
+
+---
+
+### 🔑 Hardware-Backed (Privileged Accounts)
+
+- YubiKey (FIDO2 security keys)
+- Highest assurance authentication
+- Recommended for:
+  - Global Administrators
+  - Privileged roles
+
+👉 Primary deployment path  
+
+[Full Deployment Guide](./docs/deployment/01-full-deployment-guide.md)
+
+---
+
+### 📱 Platform Passkeys (Passwordless)
+
+- Microsoft Authenticator passkeys
+- Windows Hello for Business
+- Device-bound authentication
+
+👉 Recommended for:
+- Standard users
+- Scalable deployments
+
+👉 Deployment guide  
+[Passkey Deployment Guide](./docs/platform-passkeys/01-full-deployment-guide.md)
+
+---
+
+## 🧠 Important Distinction
+
+Passkeys are:
+
+- Phishing-resistant  
+- Passwordless  
+- Device-bound  
+
+They satisfy strong authentication requirements without traditional MFA prompts.
+
+---
+
+## 🏗️ Recommended Architecture
+
+```plaintext
+Privileged Users:
+  → YubiKey (hardware, highest assurance)
+
+Standard Users:
+  → Authenticator passkeys
+  → Windows Hello for Business
+
+Fallback:
+  → Temporary Access Pass (TAP)
+```
 
 ---
 
