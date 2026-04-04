@@ -1,29 +1,21 @@
-
-### `docs/architecture/ca-evaluation.md`
-
-```md
-# Conditional Access Evaluation
+# Conditional Access Evaluation Flow
 
 ```mermaid
 flowchart TD
-    A[Privileged user sign-in] --> B{Break-glass account?}
-    B -->|Yes| C[Excluded from CA]
-    B -->|No| D[Target: All cloud apps]
+    A[User Sign-In] --> B{Break-glass?}
+    B -->|Yes| C[Bypass CA]
+    B -->|No| D[Evaluate Policies]
 
-    D --> E{Policy mode}
-    E -->|Report-only| F[Log outcome only]
-    E -->|On| G[Enforce grant controls]
+    D --> E{Policy Type}
+    E -->|Lab| F[Require MFA]
+    E -->|Production| G[Require Phishing-Resistant MFA]
 
-    G --> H{Lab or Production}
-    H -->|Lab| I[Grant: Require MFA]
-    H -->|Production| J[Grant: Require auth strength]
+    F --> H{Method}
+    H -->|YubiKey| I[Allow]
+    H -->|Authenticator| I
+    H -->|Hello| I
 
-    I --> K{Method used}
-    K -->|YubiKey| L[Allowed]
-    K -->|Authenticator| L
-    K -->|Windows Hello| L
-
-    J --> M{Method used}
-    M -->|YubiKey| N[Allowed]
-    M -->|Windows Hello| N
-    M -->|Authenticator| O[Blocked]
+    G --> J{Method}
+    J -->|YubiKey| K[Allow]
+    J -->|Hello| K
+    J -->|Authenticator| L[Block]
