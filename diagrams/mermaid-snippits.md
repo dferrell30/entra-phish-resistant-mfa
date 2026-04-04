@@ -1,24 +1,29 @@
-# Authentication Flow
+
+### `docs/architecture/ca-evaluation.md`
+
+```md
+# Conditional Access Evaluation
 
 ```mermaid
 flowchart TD
-    A[User starts sign-in] --> B{Conditional Access applies?}
-    B -->|No| C[Standard Entra sign-in]
-    B -->|Yes| D{Policy type}
-    D -->|Lab policy| E[Require MFA]
-    D -->|Privileged production| F[Require authentication strength: Phishing-resistant MFA]
+    A[Privileged user sign-in] --> B{Break-glass account?}
+    B -->|Yes| C[Excluded from CA]
+    B -->|No| D[Target: All cloud apps]
 
-    E --> G{Allowed methods}
-    G -->|YubiKey| H[FIDO2 PIN + touch]
-    G -->|Authenticator| I[Push / number match]
-    G -->|Windows Hello| J[Hello for Business]
+    D --> E{Policy mode}
+    E -->|Report-only| F[Log outcome only]
+    E -->|On| G[Enforce grant controls]
 
-    F --> K{Allowed methods}
-    K -->|YubiKey| H
-    K -->|Windows Hello| J
-    K -->|Authenticator| L[Blocked]
+    G --> H{Lab or Production}
+    H -->|Lab| I[Grant: Require MFA]
+    H -->|Production| J[Grant: Require auth strength]
 
-    H --> M[Access granted]
-    I --> M
-    J --> M
-    L --> N[Access denied]
+    I --> K{Method used}
+    K -->|YubiKey| L[Allowed]
+    K -->|Authenticator| L
+    K -->|Windows Hello| L
+
+    J --> M{Method used}
+    M -->|YubiKey| N[Allowed]
+    M -->|Windows Hello| N
+    M -->|Authenticator| O[Blocked]
