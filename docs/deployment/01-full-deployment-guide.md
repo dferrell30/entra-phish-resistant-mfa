@@ -20,7 +20,9 @@ flowchart TD
 
     F --> H{Allowed Methods}
     H -->|YubiKey| I[Access Granted]
+
     H -->|Authenticator| I
+
     H -->|Windows Hello| I
 
     G --> J{Allowed Methods}
