@@ -5,6 +5,9 @@
 ![Security](https://img.shields.io/badge/Security-Phishing--Resistant-purple)
 ![Status](https://img.shields.io/badge/Status-Lab%20to%20Production-orange)
 
+## 🎯 Purpose
+This repository provides a complete deployment, validation, and operational playbook for implementing phishing-resistant MFA using YubiKeys (FIDO2/passkeys) in Microsoft Entra ID.
+
 # Entra Phishing-Resistant MFA
 
 ## Contents
