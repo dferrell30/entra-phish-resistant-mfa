@@ -1,8 +1,35 @@
-# 🧰 Full Deployment Guide
+# 🔐 Entra Phishing-Resistant MFA Deployment Guide
 
 > [!TIP]
 > This guide is designed to be followed step-by-step.  
-> If you are new, complete this guide first before reviewing individual components.
+> If you are new, complete this guide fully before using individual documents.
+
+---
+
+## 🧭 Authentication Flow Overview
+
+```mermaid
+flowchart TD
+    A[User Sign-In] --> B{Break-glass account?}
+    B -->|Yes| C[Bypass Conditional Access]
+    B -->|No| D[Evaluate Conditional Access Policies]
+
+    D --> E{Policy Type}
+    E -->|Lab Policy| F[Require MFA]
+    E -->|Production Policy| G[Require Phishing-Resistant MFA]
+
+    F --> H{Allowed Methods}
+    H -->|YubiKey| I[Access Granted]
+    H -->|Authenticator| I
+    H -->|Windows Hello| I
+
+    G --> J{Allowed Methods}
+    J -->|YubiKey| K[Access Granted]
+    J -->|Windows Hello| K
+    J -->|Authenticator| L[Blocked]
+
+    C --> M[Emergency Access]
+```
 
 Table of Contents
 
