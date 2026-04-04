@@ -438,30 +438,307 @@ If a user cannot enroll or loses access:
 
 ---
 
-# 🧪 Step 3 — Validate Enrollment
+# 🛡️ Step 3 — Conditional Access (Passkeys)
+
+This step enforces passwordless, phishing-resistant authentication using passkeys.
+
+> [!IMPORTANT]
+> This deployment targets **standard users only**.  
+> Privileged accounts should be covered by a separate YubiKey-based policy.
+
+---
+
+## 🧠 Policy Design Overview
+
+Two policies are used:
+
+| Policy | Purpose | Mode |
+|-------|--------|------|
+| Lab Policy | Validate passkey authentication | Report-only |
+| Production Policy | Enforce passkeys | Report-only → Enabled |
+
+---
+
+## ⚠️ Key Design Principles
+
+- Always start in **Report-only mode**
+- Do not enforce until users are enrolled
+- Separate standard users from privileged users
+- Use **Authentication Strengths** for enforcement
+
+---
+
+# 🧪 Step 3A — Create Lab Policy
+
+## 🎯 Purpose
+
+- Validate passkey authentication
+- Allow fallback during testing
+- Identify issues before enforcement
+
+---
+
+## 📋 Policy Configuration (GUI)
+
+Go to:
+
+**Entra ID → Security → Conditional Access → New policy**
+
+### Assignments
+
+#### Users
+
+- Include:
+  - All users (or pilot group)
+- Exclude:
+  - Break-glass account
+  - Privileged admin roles (recommended)
+
+---
+
+#### Target Resources
+
+- Cloud apps:
+  - **All cloud apps**
+
+---
+
+#### Conditions
+
+- Client apps:
+  - Browser
+  - Mobile apps and desktop clients
+
+---
+
+### Grant Controls
+
+- Grant access
+- Require:
+  - **Multi-factor authentication**
+
+---
+
+### Session
+
+- None
+
+---
+
+### Enable Policy
+
+- Set to:
+  - **Report-only**
+
+---
+
+## 🛠️ PowerShell (Lab Policy)
+
+```powershell
+param(
+    [Parameter(Mandatory)]
+    [string]$BreakGlassObjectId
+)
+
+$params = @{
+    displayName = "CA - Passkey - Standard Users (Lab)"
+    state       = "enabledForReportingButNotEnforced"
+    conditions  = @{
+        users = @{
+            includeUsers = @("All")
+            excludeUsers = @($BreakGlassObjectId)
+        }
+        applications = @{
+            includeApplications = @("All")
+        }
+        clientAppTypes = @(
+            "browser",
+            "mobileAppsAndDesktopClients"
+        )
+    }
+    grantControls = @{
+        operator = "OR"
+        builtInControls = @("mfa")
+    }
+}
+
+New-MgIdentityConditionalAccessPolicy -BodyParameter $params
+```
+
+✅ Expected Result (Lab)
+MFA required
+Authenticator passkeys work
+Windows Hello works
+Password still allowed (fallback)
+🧪 Step 3B — Validate Lab Policy
 
 Test:
 
-- Sign-in using Authenticator passkey
-- Sign-in using Windows Hello
-- Confirm no password prompt
+Authenticator passkey login
+Windows Hello login
+Password fallback still works
 
----
+Check:
+
+Entra → Sign-in logs
+
+Verify:
+
+Policy applied
+Authentication method used
+🔐 Step 3C — Create Production Policy
+🎯 Purpose
+Enforce phishing-resistant authentication
+Block password-based sign-in
+📋 Policy Configuration (GUI)
+
+Go to:
+
+Entra ID → Security → Conditional Access → New policy
+
+Assignments
+Users
+Include:
+- All users (or production group)
+Exclude:
+- Break-glass account
+- Privileged admin roles
+- Target Resources
+Cloud apps:
+- All cloud apps
+Conditions
+- Client apps:
+    - Browser
+    - Mobile apps and desktop clients
+Grant Controls
+- Grant access
+Require:
+- Authentication strength
+Select:
+- Phishing-resistant MFA
+Enable Policy
+Set to:
+- Report-only
   
-# 🚀 Step 4 — Deploy Conditional Access (Lab)
-
-Run:
+🛠️ PowerShell (Production Policy)
 
 ```Powershell
-.\scripts\11-create-ca-passkey-lab.ps1
+param(
+    [Parameter(Mandatory)]
+    [string]$BreakGlassObjectId,
+
+    [Parameter(Mandatory)]
+    [string]$AuthenticationStrengthId
+)
+
+$params = @{
+    displayName = "CA - Passkey - Standard Users (Phishing-Resistant)"
+    state       = "enabledForReportingButNotEnforced"
+    conditions  = @{
+        users = @{
+            includeUsers = @("All")
+            excludeUsers = @($BreakGlassObjectId)
+        }
+        applications = @{
+            includeApplications = @("All")
+        }
+        clientAppTypes = @(
+            "browser",
+            "mobileAppsAndDesktopClients"
+        )
+    }
+    grantControls = @{
+        operator = "OR"
+        authenticationStrength = @{
+            id = $AuthenticationStrengthId
+        }
+    }
+}
+
+New-MgIdentityConditionalAccessPolicy -BodyParameter $params
 ```
 
-Expected Result:
+🧪 Step 3D — Validate Production Policy
 
-- MFA required
-- Authenticator allowed
-- Windows Hello allowed
-- Policy in report-only mode
+Test:
+
+- Authenticator passkey login → ✅ works
+- Windows Hello login → ✅ works
+- Password login → ❌ blocked
+
+🔍 Verify in Sign-in Logs
+
+Check:
+
+- Authentication method = Passkey / FIDO2
+- Policy result = Success
+- No fallback methods used
+
+🚀 Step 3E — Enable Production Policy
+
+Only after validation:
+
+GUI
+Open policy
+Set:
+Enable = On
+
+```PowerShell
+Update-MgIdentityConditionalAccessPolicy `
+  -ConditionalAccessPolicyId "<policy-id>" `
+  -BodyParameter @{ state = "enabled" }
+```
+  
+⚠️ Critical Safety Checks
+
+Before enabling:
+
+- Users are enrolled in passkeys
+- Break-glass account tested
+- TAP available
+- Sign-in logs reviewed
+- No conflicting policies
+
+🧠 Architecture Notes
+Standard Users:
+  → Passkeys (Authenticator required)
+  → Windows Hello (optional)
+
+Privileged Users:
+  → YubiKey (separate policy)
+  
+⚡ Best Practices
+- Use pilot group first
+- Never enforce without validation
+- Keep admin and user policies separate
+- Monitor sign-in logs continuously
+- Avoid mixing authentication methods in one policy
+
+---
+
+# 🔥 What you now have
+
+You now built:
+
+- Step 1 → Enable passkeys ✅  
+- Step 2 → User enrollment ✅  
+- Step 3 → Conditional Access ✅  
+
+👉 This is now a **complete deployment path**
+
+---
+
+# 👍 Next step (final)
+
+If you want to finish the set:
+
+👉 say  
+**“build step 4 validation + operations”**
+
+and I’ll give you:
+- full validation guide
+- operational lifecycle (lost device, reset, etc.)
+- enterprise-grade finishing touches
 
 ---
   
