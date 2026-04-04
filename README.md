@@ -1,28 +1,39 @@
 # 🔐 Entra Phishing-Resistant MFA (YubiKey) Playbook
 
+<div align="left">
+
 [![Microsoft Entra](https://img.shields.io/badge/Microsoft-Entra-blue)](./docs/deployment/01-full-deployment-guide.md)
 [![Auth](https://img.shields.io/badge/Auth-FIDO2%20%7C%20YubiKey-green)](./docs/deployment/01-full-deployment-guide.md)
 [![Security](https://img.shields.io/badge/Security-Phishing--Resistant-purple)](./docs/policies/ca-privileged-phish-resistant.md)
 [![Status](https://img.shields.io/badge/Status-Lab%20to%20Production-orange)](./docs/deployment/01-full-deployment-guide.md)
 
-A practical deployment and operations playbook for rolling out phishing-resistant MFA in Microsoft Entra ID using YubiKeys, Conditional Access, break-glass protections, and a controlled lab fallback path.
+</div>
+
+> 🚀 **Start here:** [Full Deployment Guide](./docs/deployment/01-full-deployment-guide.md)  
+> 📋 [Prerequisites](./docs/deployment/02-prerequisites.md)  
+> 🔑 [YubiKey Enrollment](./docs/deployment/03-yubikey-enrollment.md)
+
+A deployment and operations playbook for implementing phishing-resistant MFA in Microsoft Entra ID using YubiKeys, Conditional Access, break-glass protections, and a controlled lab-to-production rollout path.
+
+---
+
+## 📚 Quick Navigation
+
+| Section | Link |
+|---|---|
+| 🚀 Deployment Guide | [01-full-deployment-guide.md](./docs/deployment/01-full-deployment-guide.md) |
+| 📋 Prerequisites | [02-prerequisites.md](./docs/deployment/02-prerequisites.md) |
+| 🔑 Enrollment | [03-yubikey-enrollment.md](./docs/deployment/03-yubikey-enrollment.md) |
+| 🛡️ Policies | [Policies](./docs/policies/) |
+| 🧰 Operations | [Operations](./docs/operations/) |
+| ✅ Validation | [Validation](./docs/validation/) |
+| ⚙️ Scripts | [Scripts](./scripts/) |
 
 ---
 
 ## 🎯 Purpose
 
 This repository provides a complete deployment, validation, and operational playbook for implementing phishing-resistant MFA using YubiKeys (FIDO2/passkeys) in Microsoft Entra ID.
-
----
-
-## 📚 Contents
-
-- [Architecture](#-architecture)
-- [Deployment Phases](#-deployment-phases)
-- [Documentation](#-documentation)
-- [Validation](#-validation)
-- [Security Notes](#-security-notes)
-- [Design Philosophy](#-design-philosophy)
 
 ---
 
