@@ -70,14 +70,91 @@ They satisfy strong authentication requirements without traditional MFA prompts.
 
 ---
 
-# 🧰 Step 1 — Enable Passkeys (FIDO2)
+# ⚙️ Step 1 — Enable Passkeys in Microsoft Entra ID
 
-Invoke-MgGraphRequest `
-  -Method PATCH `
-  -Uri "https://graph.microsoft.com/v1.0/authenticationMethodsPolicy/authenticationMethodConfigurations/fido2" `
-  -Body '{"state":"enabled"}' `
-  -ContentType "application/json"
-  
+This step enables passkeys (FIDO2) in Microsoft Entra ID so users can register and use passkeys.
+
+> [!IMPORTANT]
+> For this deployment, **Microsoft Authenticator passkeys are the primary required path**.  
+> **Windows Hello for Business is recommended but not required**.
+
+---
+
+### Option A — GUI (Recommended)
+
+Use the Microsoft Entra admin center to enable passkeys.
+
+#### Prerequisites
+
+- You must sign in with a role that can manage authentication methods, such as:
+  - Global Administrator
+  - Authentication Policy Administrator
+
+#### Steps
+
+1. Sign in to the **Microsoft Entra admin center**
+2. Go to:
+
+   **Entra ID** → **Security** → **Authentication methods** → **Policies**
+
+3. Open the **Passkey (FIDO2)** policy
+
+4. If prompted to enable **passkey profiles**, enable them
+
+   - Microsoft automatically moves existing global FIDO2 settings into the **Default passkey profile**
+
+5. In the passkey profile or policy, set the method to:
+
+   - **Enable**
+
+6. Choose who can use passkeys:
+
+   - **All users**, or
+   - **Selected users / groups**
+
+   > Recommended: start with a pilot group first
+
+7. Review optional settings such as:
+
+   - Attestation enforcement
+   - Key restrictions / passkey provider restrictions
+   - User self-service behavior
+
+8. Save the policy
+
+#### Expected Result
+
+- Passkeys are enabled in the tenant
+- Assigned users can register passkeys
+- Microsoft Authenticator passkeys can be used for sign-in
+- Windows Hello can also be used where supported, but it is optional for this deployment
+
+---
+
+### Option B — PowerShell / Graph
+
+Use this if you want to enable passkeys programmatically.
+
+#### Where to run it
+
+Run this from:
+
+- **PowerShell 7+**
+- On an admin workstation
+- After connecting to Microsoft Graph with the required scopes
+
+#### Before you run it
+
+Open **PowerShell 7** and connect to Microsoft Graph:
+
+```powershell
+Connect-MgGraph -Scopes `
+  "Policy.Read.All", `
+  "Policy.ReadWrite.AuthenticationMethod"
+```
+
+---
+
 # 👤 Step 2 — User Enrollment
 
 Users must enroll in at least one supported passkey method.
@@ -101,6 +178,8 @@ Users must enroll in at least one supported passkey method.
 
 Windows Hello is not required for this deployment, but it is recommended to improve user experience and recovery resilience on Windows devices.
 
+---
+
 # 🧪 Step 3 — Validate Enrollment
 
 Test:
@@ -108,6 +187,8 @@ Test:
 - Sign-in using Authenticator passkey
 - Sign-in using Windows Hello
 - Confirm no password prompt
+
+---
   
 # 🚀 Step 4 — Deploy Conditional Access (Lab)
 
@@ -123,6 +204,8 @@ Expected Result:
 - Authenticator allowed
 - Windows Hello allowed
 - Policy in report-only mode
+
+---
   
 # 🧪 Step 5 — Validate Authentication
 
@@ -131,6 +214,8 @@ Test:
 - Authenticator passkey login
 - Windows Hello login
 - Sign-in logs show correct method
+
+---
 
 # 🔐 Step 6 — Deploy Production Policy
 
