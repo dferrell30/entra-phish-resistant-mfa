@@ -1,164 +1,189 @@
-🔐 Microsoft Authenticator Enrollment Guide (MFA + Passkeys)
+# 🔐 Microsoft Authenticator Enrollment Guide (MFA + Passkeys)
 
-This guide walks users through:
+This guide walks you through:
 
 - Setting up Microsoft Authenticator (MFA)
 - Registering a passkey (passwordless sign-in)
 - Optional Windows Hello setup
-- Testing and troubleshooting
-
-🧭 Authentication Overview
-
-## 📱 Step 1 — Install Microsoft Authenticator
-- Download the app:
-iOS: App Store
-Android: Google Play
-- Open the app
-
-## 🔑 Step 2 — Add Your Work Account
-
-- Tap + Add account
-- Select:
-Work or school account
-- Choose:
-Scan QR code (recommended)
-Follow your organization’s sign-in process
-
-✅ Expected Result
-
-- Your work account appears in Authenticator
-- You can receive approval prompts
-
-## 🔐 Step 3 — Set Up MFA (Multi-Factor Authentication)
-
-If prompted during sign-in:
-
-Choose:
-- Approve a request
-- Approve the notification on your phone
-- Complete sign-in
-- 
-🔁 Alternative (Manual Setup)
-- Go to:
-https://mysignins.microsoft.com/security-info
-- Click:
-Add sign-in method
-- Select:
-Authenticator app
-- Scan QR code using the app
-
-✅ Expected Result
-
-- MFA prompts appear on your phone
-- You can approve sign-ins
+- Testing your sign-in
 
 ---
 
-## 🔑 Step 4 — Register a Passkey (Passwordless)
+## 🧭 Authentication Overview
 
-Passkeys allow you to sign in without a password.
+```mermaid
+flowchart TD
+    A[User Sign-In] --> B{Authentication Method}
+    B -->|MFA| C[Approve via Authenticator]
+    B -->|Passkey| D[Use Phone Biometric / PIN]
 
-📱 Option A — Microsoft Authenticator (Required)
+    D --> E{Optional}
+    E -->|Windows Hello| F[Use Device Biometric]
 
-Open:
+    C --> G[Access Granted]
+    D --> G
+    F --> G
+📱 Step 1 — Install Microsoft Authenticator
+Download Microsoft Authenticator:
+iPhone → App Store
+Android → Google Play
+Open the app
+🔑 Step 2 — Add Your Work Account
+Tap + Add account
+Select Work or school account
+Choose Scan QR code
+Follow sign-in instructions
+✅ Expected Result
+Your account appears in the app
+You can receive sign-in prompts
+🔐 Step 3 — Set Up MFA
+Sign in to your account
+Choose Approve request
+Approve notification on your phone
+🔁 Manual Setup (if needed)
+Go to:
 https://mysignins.microsoft.com/security-info
-
-Click:
-Add sign-in method
-
+Click Add sign-in method
+Select Authenticator app
+Scan QR code
+🔑 Step 4 — Register a Passkey
+Go to:
+https://mysignins.microsoft.com/security-info
+Click Add sign-in method
 Select:
 Passkey (preview) or FIDO2 security key
-
 Choose:
 Use your phone
-
 Follow prompts:
-
-Confirm account
-
-Approve on Authenticator
-
-Use biometric (Face ID / fingerprint) or PIN
-
+Approve in Authenticator
+Use Face ID / fingerprint / PIN
 ✅ Expected Result
-
-- Passkey is registered
-- You can sign in using your phone
-- No password required
-
----
-
-## 💻 Step 5 — (Optional) Set Up Windows Hello
+Passkey is registered
+No password required for sign-in
+💻 Step 5 — (Optional) Set Up Windows Hello
 
 ⚠️ Recommended but not required
 
 Go to:
 Settings → Accounts → Sign-in options
-
-Set up:
-Windows Hello PIN
+Configure:
+PIN
 Fingerprint or facial recognition
-
-✅ Expected Result
-You can sign in using your device
-No phone required (on that device)
-
 🧪 Step 6 — Test Your Sign-In
+✅ Passkey Test (Recommended)
+Open a private browser
+Sign in to Microsoft 365
 
-Test 1 — Passkey (Recommended)
-Open a new browser (Incognito / InPrivate)
-Go to:
-Microsoft 365 or your work app
+Expected:
+
+Passkey prompt appears
+Authenticator approval
+No password required
+✅ MFA Test
 Sign in
-
-✅ You should see:
-
-- Passkey prompt
-- Authenticator approval
-- No password required
-- Test 2 — MFA
-- Sign in normally
-- Approve notification on your phone
-- Test 3 — Windows Hello (Optional)
-- Sign in on your device
-- Use biometric or PIN
-
+Approve notification
+✅ Windows Hello Test (Optional)
+Sign in on device
+Use biometric or PIN
 ⚠️ Troubleshooting
-
-❌ No Authenticator prompt
+<details> <summary><strong>Click to expand</strong></summary>
+No Authenticator prompt
 Ensure app is installed
-Check notifications are enabled
+Enable notifications
 Confirm account is added
-
-❌ Passkey option missing
-Ensure your organization enabled passkeys
-Try again from:
+Passkey option missing
+Ensure passkeys are enabled by IT
+Try again at:
 https://mysignins.microsoft.com/security-info
-
-❌ Cannot sign in
-Use backup method (if available)
-Contact IT support
+Cannot sign in
+Use backup method
+Contact IT
+</details>
 🛟 Recovery Options
-
-If you lose access:
-
-1. Contact IT support
-2. Request Temporary Access Pass (TAP)
-3. Re-register your authentication methods
-
+Contact IT support
+Request Temporary Access Pass (TAP)
+Re-register methods
 🧠 Key Takeaways
-Microsoft Authenticator is required
+Authenticator is required
 Passkeys replace passwords
-Windows Hello is optional but recommended
-Always complete setup before enforcement
-
-📌 Summary
-Feature	Required	Purpose
-Authenticator App	✅ Yes	MFA + passkey
-Passkey	✅ Yes	Passwordless login
-Windows Hello	⚠️ Optional	Device-based login
-
+Windows Hello is optional
+Always complete setup
 🔐 Security Reminder
-- Never approve unexpected sign-in requests
-- Do not share approval codes
-- Report suspicious activity immediately
+Never approve unknown sign-ins
+Do not share codes
+Report suspicious activity
+
+---
+
+# ✅ 2. QUICK START (ONE-PAGER)
+
+👉 Save as:
+
+```plaintext
+docs/platform-passkeys/user-quick-start.md
+# 🚀 Quick Start — Microsoft Authenticator & Passkeys
+
+Follow these steps to get secure sign-in working.
+
+---
+
+## 📱 1. Install Authenticator
+
+- Download Microsoft Authenticator  
+- Open the app  
+
+---
+
+## 🔑 2. Add Your Account
+
+- Tap **+ Add account**  
+- Select **Work or school account**  
+- Scan QR code  
+
+---
+
+## 🔐 3. Approve MFA
+
+- Sign in  
+- Approve notification on your phone  
+
+---
+
+## 🔑 4. Set Up Passkey (IMPORTANT)
+
+Go to:  
+https://mysignins.microsoft.com/security-info  
+
+- Click **Add sign-in method**  
+- Select **Passkey**  
+- Choose **Use your phone**  
+- Approve with Face ID / fingerprint  
+
+---
+
+## 💻 5. (Optional) Windows Hello
+
+- Settings → Accounts → Sign-in options  
+- Set up PIN / biometric  
+
+---
+
+## 🧪 6. Test
+
+- Sign in to Microsoft 365  
+- Use passkey  
+- No password needed  
+
+---
+
+## 🛟 Need Help?
+
+- Contact IT  
+- Request Temporary Access Pass (TAP)  
+
+---
+
+## 🔐 Reminder
+
+- Never approve unexpected sign-ins  
+- Keep your device secure  
