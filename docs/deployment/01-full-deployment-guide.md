@@ -30,6 +30,18 @@ flowchart TD
 
     C --> M[Emergency Access]
 ```
+---
+
+## ⚠️ Before You Start
+
+This guide assumes:
+
+- You have Global Administrator access
+- A break-glass account is already created and excluded from Conditional Access
+- You are testing in a non-production or controlled environment
+- You understand that misconfiguration may result in administrative lockout
+
+---
 
 Table of Contents
 
