@@ -127,3 +127,11 @@ This repository provides a complete deployment, validation, and operational play
 - ✔ Lab-ready  
 - ✔ Enterprise-ready  
 - ✔ Zero Trust aligned
+
+---
+
+## 🚀 Start Here
+
+1. [Full Deployment Guide](docs/deployment/full-deployment-guide.md)
+2. [Prerequisites](docs/deployment/prerequisites.md)
+3. [PowerShell Setup](docs/deployment/powershell-setup.md)
