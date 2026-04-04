@@ -36,10 +36,10 @@ flowchart TD
 
 This guide assumes:
 
-- You have Global Administrator access
-- A break-glass account is already created and excluded from Conditional Access
-- You are testing in a non-production or controlled environment
-- You understand that misconfiguration may result in administrative lockout
+- You have Global Administrator access  
+- A break-glass account is created and excluded from Conditional Access  
+- You are testing in a controlled or lab environment  
+- Misconfiguration may result in administrative lockout  
 
 ---
 
@@ -182,7 +182,7 @@ Phishing-resistant MFA
 
 Copy the id
 
-##Step 9 — Create Phishing-Resistant Policy
+## Step 9 — Create Phishing-Resistant Policy
 
 Script:
 06-create-ca-privileged-phishing-resistant.ps1
@@ -213,6 +213,15 @@ Verify:
 
 - Policy evaluation
 - Authentication method used
+
+---
+
+## ✅ What Success Looks Like
+
+- Lab policy allows both YubiKey and Authenticator  
+- Phishing-resistant policy blocks Authenticator  
+- YubiKey authentication succeeds consistently  
+- Break-glass account bypasses all Conditional Access policies  
 
 ---
 
@@ -267,3 +276,23 @@ If access is lost:
 - Use at least two YubiKeys for privileged users
   
 </details> ```
+
+---
+
+# 🛠️ Troubleshooting
+
+### Cannot connect to Graph
+- Ensure required scopes are granted  
+- Re-run Connect-MgGraph  
+
+### Script fails with permission error
+- Verify Global Administrator role  
+- Confirm admin consent was granted  
+
+### YubiKey not prompting
+- Use supported browser (Edge or Chrome)  
+- Ensure FIDO2/passkeys are enabled in Entra  
+
+### Locked out
+- Use break-glass account  
+- Use Temporary Access Pass (TAP)
