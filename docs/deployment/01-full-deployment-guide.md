@@ -6,6 +6,50 @@
 
 A complete, end-to-end process for deploying phishing-resistant MFA using YubiKeys (FIDO2/passkeys) in Microsoft Entra ID.
 
+## 🔄 Policy Interaction Diagram
+
+```mermaid
+flowchart TD
+    A[User attempts sign-in] --> B{Break-glass account?}
+    B -->|Yes| C[Excluded from all Conditional Access]
+    B -->|No| D[Evaluate Conditional Access assignments]
+
+    D --> E{Admin / privileged role?}
+    E -->|No| F[Evaluate standard user policies]
+    E -->|Yes| G[Evaluate privileged access policies]
+
+    G --> H{Lab policy enabled?}
+    H -->|Yes| I[Require MFA]
+    H -->|No| J[Skip to production policy]
+
+    I --> K{Authentication method used}
+    K -->|YubiKey| L[Allowed]
+    K -->|Authenticator| L
+    K -->|Windows Hello| L
+
+    J --> M{Production policy enabled?}
+    M -->|Yes| N[Require phishing-resistant MFA]
+    M -->|No| O[No production enforcement]
+
+    N --> P{Authentication method used}
+    P -->|YubiKey| Q[Allowed]
+    P -->|Windows Hello| Q
+    P -->|Authenticator| R[Blocked]
+
+    Q --> S{Defender for Cloud Apps session control applied?}
+    L --> S
+
+    S -->|No| T[Access granted]
+    S -->|Yes| U{Admin portal or privileged app?}
+    U -->|Yes| V[Not recommended - may disrupt FIDO2]
+    U -->|No| W[Apply session monitoring / app control]
+
+    V --> X[Potential login loop or failed prompt]
+    W --> T
+    O --> T
+    F --> T
+```
+
 ---
 
 ## 🧭 Authentication Flow Overview
