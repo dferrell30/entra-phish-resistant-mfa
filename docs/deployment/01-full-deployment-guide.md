@@ -4,6 +4,8 @@
 > Follow this guide step-by-step.  
 > Do not skip validation steps before enabling policies.
 
+A complete, end-to-end process for deploying phishing-resistant MFA using YubiKeys (FIDO2/passkeys) in Microsoft Entra ID.
+
 ---
 
 ## 🧭 Authentication Flow Overview
@@ -20,54 +22,49 @@ flowchart TD
 
     F --> H{Allowed Methods}
     H -->|YubiKey| I[Access Granted]
-    H -->|MSAuth| I
+    H -->|Authenticator| I
     H -->|Windows Hello| I
 
     G --> J{Allowed Methods}
     J -->|YubiKey| K[Access Granted]
     J -->|Windows Hello| K
-    J -->|MSAuth| L[Blocked]
+    J -->|Authenticator| L[Blocked]
 
     C --> M[Emergency Access]
 ```
----
 
 ## ⚠️ Before You Start
 
 This guide assumes:
 
-- You have Global Administrator access  
-- A break-glass account is created and excluded from Conditional Access  
-- You are testing in a controlled or lab environment  
-- Misconfiguration may result in administrative lockout  
+- You have Global Administrator access
+- A break-glass account is created and excluded from Conditional Access
+- You are testing in a controlled or lab environment
+- Misconfiguration may result in administrative lockout
 
 ---
 
-Table of Contents
+## 📚 Supporting Documents
 
-- [Critical Safety Checks](#-critical-safety-checks)
-- [Recovery Options](#-recovery-options)
-- [Key Concepts](#-key-concepts)
-- [Best Practices](#-best-practices)
+Prerequisites
+YubiKey Enrollment
 
----
+## 🧰 Step 1 — Environment Setup
 
-# 🧰 PowerShell Setup
+Install PowerShell 7
 
-## Install PowerShell 7
-
-Check your version:
-
-```powershell
+```Powershell
 $PSVersionTable.PSVersion
 ```
 
 You should see version 7.x or higher.
 
-If not installed, download from:
+If not installed:
 https://github.com/PowerShell/PowerShell
 
-```powershell
+---
+
+```Powershell
 Set Execution Policy
 Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 Install Required Modules
@@ -78,98 +75,78 @@ Connect-MgGraph -Scopes `
   "Policy.Read.All", `
   "Policy.ReadWrite.ConditionalAccess", `
   "Application.Read.All", `
-  "Policy.ReadWrite.AuthenticationMethod"
+  "Policy.ReadWrite.AuthenticationMethod"'
 ```
+
 Verify Connection
 
-```powershell
+```Powershell
 Get-MgContext
 ```
+
 ---
 
-🚀 Script Execution Runbook
+## 🚀 Step 2 — Execute Deployment Scripts
 
-[!NOTE]
-Script links open the file in GitHub for review.
+### Running Scripts
 
-Run scripts locally from the repo root or scripts folder.
+You can run scripts from either location:
 
-## Step 1 — Navigate to Scripts
-
+Option 1 — From scripts folder
 cd .\scripts
+.\00-install-modules.ps1
 
----
+Option 2 — From repository root (recommended)
+.\scripts\00-install-modules.ps1
 
-## Step 2 — Install Modules
+### Install Modules Script
 
 Script:
 00-install-modules.ps1
 
 .\00-install-modules.ps1
-
----
-
-## Step 3 — Connect to Graph
+Connect to Graph Script
 
 Script:
-
 01-connect-graph.ps1
 
 .\01-connect-graph.ps1
-
----
-
-## Step 4 — Identify Break-Glass Account
+Identify Break-Glass Account
 
 Script:
-
 02-get-breakglass-user.ps1
 
 .\02-get-breakglass-user.ps1 -UserPrincipalName "breakglass@yourtenant.onmicrosoft.com"
 
-Copy the returned:
+📌 Copy:
 
 id → BreakGlassObjectId
-
----
-
-## Step 5 — Review FIDO2 Configuration (Optional)
+Review FIDO2 Configuration (Optional)
 
 Script:
 04-enable-fido2-template.ps1
 
 .\04-enable-fido2-template.ps1 -WhatIf
-
----
-
-## Step 6 — Create Lab Conditional Access Policy
+Create Lab Conditional Access Policy
 
 Script:
 05-create-ca-privileged-lab.ps1
 
 .\05-create-ca-privileged-lab.ps1 -BreakGlassObjectId "<object-id>"
+Expected Result
+Policy created in Report-only mode
+Allows:
+YubiKey
+Microsoft Authenticator (fallback)
+Test Authentication
 
-Result:
+Verify:
 
-- Policy created in Report-only mode
-- Allows:
-  - YubiKey
-  - Microsoft Authenticator (fallback)
-
- ---
-
-## Step 7 — Test Authentication
-
-Test the following:
-
-- New browser session
-- Sign-in options
-- YubiKey authentication
-- Authenticator fallback
-
----
-  
-## Step 8 — Get Authentication Strength ID
+New browser session
+Sign-in options available
+YubiKey authentication works
+Authenticator fallback works
+Get Authentication Strength ID
 
 Script:
 03-get-authentication-strengths.ps1
@@ -180,9 +157,9 @@ Find:
 
 Phishing-resistant MFA
 
-Copy the id
+📌 Copy the id
 
-## Step 9 — Create Phishing-Resistant Policy
+Create Phishing-Resistant Policy
 
 Script:
 06-create-ca-privileged-phishing-resistant.ps1
@@ -190,105 +167,72 @@ Script:
 .\06-create-ca-privileged-phishing-resistant.ps1 `
   -BreakGlassObjectId "<object-id>" `
   -AuthenticationStrengthId "<strength-id>"
-
-
-Result:
-
-- Policy created in Report-only mode
-- Enforces:
-  - YubiKey
-  - Windows Hello
-- Blocks:
-  - Microsoft Authenticator
-    
----
-
-## Step 10 — Validate in Sign-in Logs
+Expected Result
+Policy created in Report-only mode
+Enforces:
+YubiKey
+Windows Hello
+Blocks:
+Microsoft Authenticator
+Validate in Sign-in Logs
 
 Navigate to:
 
 Entra → Sign-in logs
 
-Verify:
+Confirm:
 
-- Policy evaluation
-- Authentication method used
-
----
-
-## ✅ What Success Looks Like
-
-- Lab policy allows both YubiKey and Authenticator  
-- Phishing-resistant policy blocks Authenticator  
-- YubiKey authentication succeeds consistently  
-- Break-glass account bypasses all Conditional Access policies  
-
----
-
-## Step 11 — Enable Policy
+Policy evaluation occurred
+Correct authentication method used
+✅ What Success Looks Like
+Lab policy allows both YubiKey and Authenticator
+Phishing-resistant policy blocks Authenticator
+YubiKey authentication succeeds consistently
+Break-glass account bypasses all Conditional Access policies
+Enable Policy
 
 Script:
 07-set-ca-policy-state.ps1
 
 .\07-set-ca-policy-state.ps1 `
   -DisplayName "CA - Privileged - Require Phishing-Resistant MFA" `
-  
   -State enabled
-  
-## ⚠️ Critical Safety Checks
-
-Before enabling enforcement:
-
+⚠️ Critical Safety Checks
 ✅ YubiKey is registered and working
-
 ✅ Backup key is available (recommended)
-
 ✅ Break-glass account is verified
-
 ✅ Sign-in logs have been reviewed
-
-## 🛟 Recovery Options
-
-<details> <summary><strong>Expand recovery options</strong></summary>
+🛟 Recovery Options
+<details> <summary><strong>Expand recovery guidance</strong></summary>
 
 If access is lost:
 
-- Use break-glass account
-- Use Temporary Access Pass (TAP)
-- Re-register authentication methods
-  
+Use break-glass account
+Use Temporary Access Pass (TAP)
+Re-register authentication methods
 </details>
-
-## 🧠 Key Concepts
-
-- Phase	Behavior
-- Lab	MFA allows fallback (Authenticator permitted)
-- Production	Only phishing-resistant methods allowed
-  
-## ⚡ Best Practices
-
-- Always start in Report-only mode
-- Never remove fallback too early
-- Always test before enforcement
-- Maintain at least one recovery path
-- Use at least two YubiKeys for privileged users
-
----
-
-# 🛠️ Troubleshooting
-
-### Cannot connect to Graph
-- Ensure required scopes are granted  
-- Re-run Connect-MgGraph  
-
-### Script fails with permission error
-- Verify Global Administrator role  
-- Confirm admin consent was granted  
-
-### YubiKey not prompting
-- Use supported browser (Edge or Chrome)  
-- Ensure FIDO2/passkeys are enabled in Entra  
-
-### Locked out
-- Use break-glass account  
-- Use Temporary Access Pass (TAP)
+🛠️ Troubleshooting
+Cannot connect to Graph
+Ensure required scopes are granted
+Re-run Connect-MgGraph
+Script fails with permission error
+Verify Global Administrator role
+Confirm admin consent was granted
+YubiKey not prompting
+Use supported browser (Edge or Chrome)
+Ensure FIDO2/passkeys are enabled in Entra
+Locked out
+Use break-glass account
+Use Temporary Access Pass (TAP)
+🧠 Key Concepts
+Phase	Behavior
+Lab	MFA allows fallback (Authenticator permitted)
+Production	Only phishing-resistant methods allowed
+⚡ Best Practices
+<details> <summary><strong>Expand best practices</strong></summary>
+Always start in Report-only mode
+Never remove fallback too early
+Always test before enforcement
+Maintain at least one recovery path
+Issue at least two YubiKeys for privileged users
+</details> ```
