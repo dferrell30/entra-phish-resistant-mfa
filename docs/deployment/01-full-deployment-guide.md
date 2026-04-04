@@ -1,8 +1,8 @@
 # 🔐 Entra Phishing-Resistant MFA Deployment Guide
 
 > [!TIP]
-> This guide is designed to be followed step-by-step.  
-> If you are new, complete this guide fully before using individual documents.
+> Follow this guide step-by-step.  
+> Do not skip validation steps before enabling policies.
 
 ---
 
