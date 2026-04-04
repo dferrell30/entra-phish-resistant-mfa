@@ -31,11 +31,12 @@ This guide assumes:
 
 - Global Administrator access
 - Break-glass account is configured and excluded
-- Users have supported devices (mobile or Windows)
-- Microsoft Authenticator is installed
+- Users have a supported mobile device for Microsoft Authenticator passkeys  
+- Windows Hello for Business is optional but recommended on supported Windows devices  
+- Microsoft Authenticator is installed  
 - Testing is performed in a controlled environment
 
-## 🧠 Platform Authentication Options
+# 🧠 Platform Authentication Options
 
 This deployment supports multiple passkey methods:
 
@@ -69,7 +70,7 @@ They satisfy strong authentication requirements without traditional MFA prompts.
 
 ---
 
-## 🧰 Step 1 — Enable Passkeys (FIDO2)
+# 🧰 Step 1 — Enable Passkeys (FIDO2)
 
 Invoke-MgGraphRequest `
   -Method PATCH `
@@ -77,21 +78,30 @@ Invoke-MgGraphRequest `
   -Body '{"state":"enabled"}' `
   -ContentType "application/json"
   
-## 👤 Step 2 — User Enrollment
+# 👤 Step 2 — User Enrollment
 
-Users must:
+Users must enroll in at least one supported passkey method.
 
-- Microsoft Authenticator
-- Install Microsoft Authenticator
-- Add work account
-- Register passkey
-- Configure biometric or PIN
-- Windows Hello (Optional but Recommended)
-- Configure Windows Hello for Business
-- Set PIN / biometric
-- Register device
+### Required for this deployment
 
-## 🧪 Step 3 — Validate Enrollment
+#### Microsoft Authenticator
+
+1. Install Microsoft Authenticator  
+2. Add work account  
+3. Register passkey  
+4. Configure biometric or PIN  
+
+### Optional but Recommended
+
+#### Windows Hello for Business
+
+1. Configure Windows Hello for Business  
+2. Set PIN or biometric  
+3. Register device  
+
+Windows Hello is not required for this deployment, but it is recommended to improve user experience and recovery resilience on Windows devices.
+
+# 🧪 Step 3 — Validate Enrollment
 
 Test:
 
@@ -99,7 +109,7 @@ Test:
 - Sign-in using Windows Hello
 - Confirm no password prompt
   
-## 🚀 Step 4 — Deploy Conditional Access (Lab)
+# 🚀 Step 4 — Deploy Conditional Access (Lab)
 
 Run:
 
@@ -114,7 +124,7 @@ Expected Result:
 - Windows Hello allowed
 - Policy in report-only mode
   
-## 🧪 Step 5 — Validate Authentication
+# 🧪 Step 5 — Validate Authentication
 
 Test:
 
@@ -122,7 +132,7 @@ Test:
 - Windows Hello login
 - Sign-in logs show correct method
 
-## 🔐 Step 6 — Deploy Production Policy
+# 🔐 Step 6 — Deploy Production Policy
 
 Run:
 
@@ -136,14 +146,14 @@ Expected Result:
 - Password-based login blocked
 - Only passkey methods allowed
   
-##✅ What Success Looks Like
+# ✅ What Success Looks Like
 
 - Users sign in without passwords
 - Authenticator passkeys work consistently
 - Windows Hello works
 - Legacy authentication is blocked
 
-## ⚠️ Critical Safety Checks
+# ⚠️ Critical Safety Checks
 
 Before enforcement:
 
@@ -152,7 +162,7 @@ Before enforcement:
 - TAP available for recovery
 - Policies tested in report-only
   
-## 🛟 Recovery Options
+# 🛟 Recovery Options
 
 If access is lost:
 
@@ -160,7 +170,7 @@ If access is lost:
 - Re-register passkey
 - Use break-glass account
   
-## 🛠️ Troubleshooting
+# 🛠️ Troubleshooting
 
 - Passkey not prompting
 - Ensure device supports FIDO2
@@ -173,7 +183,7 @@ If access is lost:
 - Check for conflicting policies
 - Review session controls
   
-## 🧠 Architecture Notes
+# 🧠 Architecture Notes
 
 This deployment is intended for:
 
@@ -184,7 +194,7 @@ Standard Users:
 Privileged Users:
   → YubiKey (separate deployment)
   
-## ⚡ Best Practices
+# ⚡ Best Practices
 
 - Start in report-only mode
 - Do not force passkeys immediately
@@ -192,6 +202,6 @@ Privileged Users:
 - Recommend Windows Hello for redundancy
 - Validate user experience before enforcement
 
-## 🧾 Licensing Requirement
+# 🧾 Licensing Requirement
 - Entra ID P1 required
 - Entra ID P2 optional (for risk-based policies)
