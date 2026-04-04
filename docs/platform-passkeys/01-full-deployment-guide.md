@@ -156,8 +156,13 @@ Connect-MgGraph -Scopes `
 ```
 Verify your connection:
 
+```powershell
 Get-MgContext
+```
+
 Run the enable-passkeys command
+
+```powershell
 Invoke-MgGraphRequest `
   -Method PATCH `
   -Uri "https://graph.microsoft.com/v1.0/authenticationMethodsPolicy/authenticationMethodConfigurations/fido2" `
@@ -167,28 +172,31 @@ Optional: verify the current configuration first
 Invoke-MgGraphRequest `
   -Method GET `
   -Uri "https://graph.microsoft.com/v1.0/authenticationMethodsPolicy/authenticationMethodConfigurations/fido2"
-Expected Result
-The tenant FIDO2 / passkey authentication method is enabled
-Users targeted by policy can begin registering passkeys
-Recommended Deployment Guidance
+```
+  
+Expected Result:
+
+- The tenant FIDO2 / passkey authentication method is enabled
+- Users targeted by policy can begin registering passkeys
+- Recommended Deployment Guidance
 
 For this deployment:
 
-Required path: Microsoft Authenticator passkeys
-Optional but recommended: Windows Hello for Business
-Why Windows Hello is recommended
+- Required path: Microsoft Authenticator passkeys
+- Optional but recommended: Windows Hello for Business
+- Why Windows Hello is recommended
 
 Windows Hello adds:
 
-Device-based authentication on managed Windows devices
-Better user experience for Windows users
-Redundancy if a phone is unavailable
-Why it is not required
+- Device-based authentication on managed Windows devices
+- Better user experience for Windows users
+- Redundancy if a phone is unavailable
+- Why it is not required
 
 Users can successfully use passkeys with:
 
-Microsoft Authenticator on a supported mobile device
-Phone biometric or PIN
+- Microsoft Authenticator on a supported mobile device
+- Phone biometric or PIN
 
 This means Windows Hello does not need to be deployed first in order to use passkeys.
 
@@ -201,10 +209,9 @@ Confirm target users are in scope
 
 Have a pilot user go to:
 
-My Sign-Ins / Security info
-
-Confirm the user can add a Passkey
-Test sign-in with Microsoft Authenticator
+- My Sign-Ins / Security info
+- Confirm the user can add a Passkey
+- Test sign-in with Microsoft Authenticator
 
 Notes:
 
@@ -216,8 +223,6 @@ Notes:
 
 > - Temporary Access Pass (TAP)
 > - Break-glass account
-
----
 
 ---
 
