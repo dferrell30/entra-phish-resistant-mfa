@@ -33,6 +33,7 @@ You should see version 7.x or higher.
 If not installed:
 https://github.com/PowerShell/PowerShell
 
+```powershell
 Set Execution Policy
 Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 Install Required Modules
@@ -44,9 +45,13 @@ Connect-MgGraph -Scopes `
   "Policy.ReadWrite.ConditionalAccess", `
   "Application.Read.All", `
   "Policy.ReadWrite.AuthenticationMethod"
+```
+
 Verify Connection
 Get-MgContext
+
 </details>
+
 🚀 Script Execution Runbook
 <details> <summary><strong>Click to expand full deployment steps</strong></summary>
 
@@ -133,8 +138,11 @@ Step 11 — Enable Policy
 Before enabling enforcement:
 
 ✅ YubiKey is registered and working
+
 ✅ Backup key is available (recommended)
+
 ✅ Break-glass account is verified
+
 ✅ Sign-in logs have been reviewed
 
 </details>
