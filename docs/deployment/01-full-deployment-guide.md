@@ -20,15 +20,13 @@ flowchart TD
 
     F --> H{Allowed Methods}
     H -->|YubiKey| I[Access Granted]
-
-    H -->|Authenticator| I
-
+    H -->|MSAuth| I
     H -->|Windows Hello| I
 
     G --> J{Allowed Methods}
     J -->|YubiKey| K[Access Granted]
     J -->|Windows Hello| K
-    J -->|Authenticator| L[Blocked]
+    J -->|MSAuth| L[Blocked]
 
     C --> M[Emergency Access]
 ```
