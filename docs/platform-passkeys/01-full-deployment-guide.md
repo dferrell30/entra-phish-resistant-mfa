@@ -35,15 +35,39 @@ This guide assumes:
 - Microsoft Authenticator is installed
 - Testing is performed in a controlled environment
 
+## 🧠 Platform Authentication Options
+
+This deployment supports multiple passkey methods:
+
+- Microsoft Authenticator passkeys
+- Windows Hello for Business
+
+### Requirement
+
+- Microsoft Authenticator passkeys are supported for this deployment
+- Windows Hello for Business is **recommended but not required**
+
+### Why Windows Hello is recommended
+
+Windows Hello provides:
+
+- Device-based passkey authentication
+- Better user experience on managed Windows devices
+- Redundancy if the user’s phone is unavailable
+
+---
+
 🧠 Key Concept
 
 Passkeys provide:
 
-Phishing-resistant authentication
-Passwordless sign-in
-Device-bound credentials
+- Phishing-resistant authentication
+- Passwordless sign-in
+- Device-bound credentials
 
 They satisfy strong authentication requirements without traditional MFA prompts.
+
+---
 
 🧰 Step 1 — Enable Passkeys (FIDO2)
 Invoke-MgGraphRequest `
