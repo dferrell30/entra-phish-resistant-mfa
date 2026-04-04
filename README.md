@@ -135,3 +135,15 @@ This repository provides a complete deployment, validation, and operational play
 1. [Full Deployment Guide](docs/deployment/01-full-deployment-guide.md)
 2. [Prerequisites](docs/deployment/02-prerequisites.md)
 3. [YubiKey Enrollment](docs/deployment/03-yubikey-enrollment.md)
+
+---
+
+## 📚 Documentation
+
+### 🔧 Deployment
+- [Full Deployment Guide](docs/deployment/01-full-deployment-guide.md)
+- [Prerequisites](docs/deployment/02-prerequisites.md)
+- [YubiKey Enrollment](docs/deployment/03-yubikey-enrollment.md)
+- [Conditional Access](docs/deployment/conditional-access.md)
+
+---
