@@ -78,6 +78,8 @@ This step enables passkeys (FIDO2) in Microsoft Entra ID so users can register a
 > For this deployment, **Microsoft Authenticator passkeys are the primary required path**.  
 > **Windows Hello for Business is recommended but not required**.
 
+Microsoft’s current guidance puts passkey/FIDO2 configuration in Microsoft Entra admin center → Entra ID → Security → Authentication methods → Policies, and enabling passkey profiles moves the global FIDO2 settings into a Default passkey profile. Microsoft also documents passkeys in Authenticator as a supported phishing-resistant authentication method
+
 ---
 
 ### Option A — GUI (Recommended)
@@ -152,6 +154,8 @@ Connect-MgGraph -Scopes `
   "Policy.Read.All", `
   "Policy.ReadWrite.AuthenticationMethod"
 ```
+
+
 
 ---
 
