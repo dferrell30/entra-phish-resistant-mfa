@@ -1,10 +1,24 @@
 # 🔐 Entra Phishing-Resistant MFA Deployment Guide
 
-This guide provides a complete, end-to-end process for deploying phishing-resistant MFA using YubiKeys (FIDO2/passkeys) in Microsoft Entra ID.
+A complete, end-to-end process for deploying phishing-resistant MFA using YubiKeys (FIDO2/passkeys) in Microsoft Entra ID.
+
+---
+
+## 📚 Contents
+
+- [PowerShell Setup](#-powershell-setup)
+- [Script Execution Runbook](#-script-execution-runbook)
+- [Safety Checks](#-critical-safety-checks)
+- [Recovery Options](#-recovery-options)
+- [Key Concepts](#-key-concepts)
+- [Best Practices](#-best-practices)
 
 ---
 
 # 🧰 PowerShell Setup
+
+<details>
+<summary><strong>Click to expand PowerShell setup steps</strong></summary>
 
 ## Install PowerShell 7
 
@@ -12,7 +26,6 @@ Check version:
 
 ```powershell
 $PSVersionTable.PSVersion
-```
 
 You should see version 7.x or higher.
 
@@ -32,7 +45,9 @@ Connect-MgGraph -Scopes `
   "Policy.ReadWrite.AuthenticationMethod"
 Verify Connection
 Get-MgContext
+</details>
 🚀 Script Execution Runbook
+<details> <summary><strong>Click to expand full deployment steps</strong></summary>
 Step 1 — Navigate to Scripts
 cd .\scripts
 Step 2 — Install Modules
@@ -50,17 +65,17 @@ Step 5 — Review FIDO2 Configuration (Optional)
 Step 6 — Create Lab Conditional Access Policy
 .\05-create-ca-privileged-lab.ps1 -BreakGlassObjectId "<object-id>"
 Result
-Report-only policy
+Policy is created in Report-only mode
 Allows:
 YubiKey
-Authenticator fallback
+Microsoft Authenticator (fallback)
 Step 7 — Test Authentication
 
-Test:
+Test the following scenarios:
 
 New browser session
 Sign-in options
-YubiKey login
+YubiKey authentication
 Authenticator fallback
 Step 8 — Get Authentication Strength ID
 .\03-get-authentication-strengths.ps1
@@ -76,50 +91,55 @@ Step 9 — Create Phishing-Resistant Policy
   -BreakGlassObjectId "<object-id>" `
   -AuthenticationStrengthId "<strength-id>"
 Result
-Report-only
+Policy is created in Report-only mode
 Enforces:
 YubiKey
 Windows Hello
 Blocks:
-Authenticator
+Microsoft Authenticator
 Step 10 — Validate in Sign-in Logs
 
-Check:
+Navigate to:
 
 Entra → Sign-in logs
 
 Verify:
 
-Policy applied
+Policy evaluation
 Authentication method used
-
 Step 11 — Enable Policy
-
 .\07-set-ca-policy-state.ps1 `
   -DisplayName "CA - Privileged - Require Phishing-Resistant MFA" `
-  
   -State enabled
+</details>
 ⚠️ Critical Safety Checks
+<details> <summary><strong>Expand safety checklist</strong></summary>
 
-Before enabling:
+Before enabling enforcement:
 
-✅ YubiKey registered and working
-✅ Backup key available (recommended)
-✅ Break-glass account verified
-✅ Sign-in logs reviewed
+✅ YubiKey is registered and working
+✅ Backup key is available (recommended)
+✅ Break-glass account is verified
+✅ Sign-in logs have been reviewed
+</details>
 🛟 Recovery Options
+<details> <summary><strong>Expand recovery options</strong></summary>
 
-If locked out:
+If access is lost:
 
 Use break-glass account
 Use Temporary Access Pass (TAP)
 Re-register authentication methods
+</details>
 🧠 Key Concepts
 Phase	Behavior
-Lab	MFA allows fallback
-Production	Only phishing-resistant methods
+Lab	MFA allows fallback (Authenticator permitted)
+Production	Only phishing-resistant methods allowed
 ⚡ Best Practices
+<details> <summary><strong>Expand best practices</strong></summary>
 Always start in Report-only mode
 Never remove fallback too early
 Always test before enforcement
 Maintain at least one recovery path
+Use at least two YubiKeys for privileged users
+</details> ```
