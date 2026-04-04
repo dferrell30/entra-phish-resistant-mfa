@@ -49,27 +49,34 @@ Get-MgContext
 </details>
 🚀 Script Execution Runbook
 <details> <summary><strong>Click to expand full deployment steps</strong></summary>
+
 Step 1 — Navigate to Scripts
 cd .\scripts
+
 Step 2 — Install Modules
 .\00-install-modules.ps1
+
 Step 3 — Connect to Graph
 .\01-connect-graph.ps1
+
 Step 4 — Identify Break-Glass Account
 .\02-get-breakglass-user.ps1 -UserPrincipalName "breakglass@yourtenant.onmicrosoft.com"
 
-Copy the returned:
+Copy the returned:id → BreakGlassObjectId
 
-id → BreakGlassObjectId
 Step 5 — Review FIDO2 Configuration (Optional)
 .\04-enable-fido2-template.ps1 -WhatIf
+
 Step 6 — Create Lab Conditional Access Policy
 .\05-create-ca-privileged-lab.ps1 -BreakGlassObjectId "<object-id>"
+
 Result
 Policy is created in Report-only mode
+
 Allows:
 YubiKey
 Microsoft Authenticator (fallback)
+
 Step 7 — Test Authentication
 
 Test the following scenarios:
@@ -78,6 +85,7 @@ New browser session
 Sign-in options
 YubiKey authentication
 Authenticator fallback
+
 Step 8 — Get Authentication Strength ID
 .\03-get-authentication-strengths.ps1
 
@@ -91,6 +99,7 @@ Step 9 — Create Phishing-Resistant Policy
 .\06-create-ca-privileged-phishing-resistant.ps1 `
   -BreakGlassObjectId "<object-id>" `
   -AuthenticationStrengthId "<strength-id>"
+
 Result
 Policy is created in Report-only mode
 Enforces:
@@ -98,6 +107,7 @@ YubiKey
 Windows Hello
 Blocks:
 Microsoft Authenticator
+
 Step 10 — Validate in Sign-in Logs
 
 Navigate to:
@@ -108,12 +118,16 @@ Verify:
 
 Policy evaluation
 Authentication method used
+
 Step 11 — Enable Policy
 .\07-set-ca-policy-state.ps1 `
   -DisplayName "CA - Privileged - Require Phishing-Resistant MFA" `
-  -State enabled
+
+-State enabled
+
 </details>
 ⚠️ Critical Safety Checks
+
 <details> <summary><strong>Expand safety checklist</strong></summary>
 
 Before enabling enforcement:
@@ -122,7 +136,9 @@ Before enabling enforcement:
 ✅ Backup key is available (recommended)
 ✅ Break-glass account is verified
 ✅ Sign-in logs have been reviewed
+
 </details>
+
 🛟 Recovery Options
 <details> <summary><strong>Expand recovery options</strong></summary>
 
@@ -131,11 +147,14 @@ If access is lost:
 Use break-glass account
 Use Temporary Access Pass (TAP)
 Re-register authentication methods
+
 </details>
+
 🧠 Key Concepts
 Phase	Behavior
 Lab	MFA allows fallback (Authenticator permitted)
 Production	Only phishing-resistant methods allowed
+
 ⚡ Best Practices
 <details> <summary><strong>Expand best practices</strong></summary>
 Always start in Report-only mode
@@ -143,4 +162,5 @@ Never remove fallback too early
 Always test before enforcement
 Maintain at least one recovery path
 Use at least two YubiKeys for privileged users
+
 </details> ```
