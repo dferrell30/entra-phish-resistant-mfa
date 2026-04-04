@@ -1,5 +1,9 @@
 # 🧰 Full Deployment Guide
 
+> [!TIP]
+> This guide is designed to be followed step-by-step.  
+> If you are new, complete this guide first before reviewing individual components.
+
 Table of Contents
 
 - [Critical Safety Checks](#-critical-safety-checks)
