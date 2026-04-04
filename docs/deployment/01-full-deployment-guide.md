@@ -10,20 +10,6 @@ A complete, end-to-end process for deploying phishing-resistant MFA using YubiKe
 
 ## 🧭 Authentication Flow Overview
 
-## 🔄 Policy Interaction Diagram
-
-# 🔐 Entra Phishing-Resistant MFA Deployment Guide
-
-> [!TIP]
-> Follow this guide step-by-step.  
-> Do not skip validation steps before enabling policies.
-
-A complete, end-to-end process for deploying phishing-resistant MFA using YubiKeys (FIDO2/passkeys) in Microsoft Entra ID.
-
----
-
-## 🧭 Authentication Flow Overview
-
 ```mermaid
 flowchart TD
     A[User Sign-In] --> B{Break-glass account?}
