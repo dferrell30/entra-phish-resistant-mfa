@@ -1,4 +1,4 @@
-# 🔐 Entra Phishing-Resistant MFA (YubiKey) Playbook
+# 🔐 Entra Phishing-Resistant MFA Playbook (YubiKey & Microsoft Authenticator Passkey)
 
 <div align="left">
 
