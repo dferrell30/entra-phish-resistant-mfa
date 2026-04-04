@@ -1,5 +1,15 @@
 # 🔐 Entra Phishing-Resistant MFA (YubiKey) Playbook
 
+# Entra Phishing-Resistant MFA
+
+![Platform](https://img.shields.io/badge/platform-Microsoft%20Entra-blue)
+![Auth](https://img.shields.io/badge/auth-FIDO2%20%7C%20YubiKey-green)
+![Access](https://img.shields.io/badge/conditional%20access-Privileged%20Accounts-purple)
+![Status](https://img.shields.io/badge/status-Lab%20to%20Production-orange)
+![License](https://img.shields.io/badge/license-MIT-lightgrey)
+
+A practical deployment and operations playbook for rolling out phishing-resistant MFA in Microsoft Entra ID using YubiKeys, Conditional Access, break-glass protections, and a controlled lab fallback path.
+
 ## 🎯 Purpose
 This repository provides a complete deployment, validation, and operational playbook for implementing phishing-resistant MFA using YubiKeys (FIDO2/passkeys) in Microsoft Entra ID.
 
