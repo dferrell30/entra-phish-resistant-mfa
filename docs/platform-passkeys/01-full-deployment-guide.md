@@ -172,38 +172,60 @@ Invoke-MgGraphRequest `
   -ContentType "application/json"
 ```
   
-Expected Result:
+### ✅ Expected Result
 
-- The tenant FIDO2 / passkey authentication method is enabled
-- Users targeted by policy can begin registering passkeys
-- Recommended Deployment Guidance
+- The tenant FIDO2 / passkey authentication method is enabled  
+- Users targeted by policy can begin registering passkeys  
+
+---
+
+### 🧠 Deployment Guidance
 
 For this deployment:
 
-- Required path: Microsoft Authenticator passkeys
-- Optional but recommended: Windows Hello for Business
-- Why Windows Hello is recommended
+- **Required:** Microsoft Authenticator passkeys  
+- **Optional (recommended):** Windows Hello for Business  
 
-Windows Hello adds:
+---
 
-- Device-based authentication on managed Windows devices
-- Better user experience for Windows users
-- Redundancy if a phone is unavailable
-- Why it is not required
+### Why Windows Hello is Recommended
 
-Users can successfully use passkeys with:
+- Device-based authentication on managed Windows devices  
+- Better user experience  
+- Redundancy if a phone is unavailable  
 
-- Microsoft Authenticator on a supported mobile device
-- Phone biometric or PIN
+---
 
-This means Windows Hello does not need to be deployed first in order to use passkeys.
+### Why It Is Not Required
 
-Validation After Step 1
+Users can authenticate using:
 
-After enabling passkeys:
+- Microsoft Authenticator passkeys  
+- Phone biometric or PIN  
 
-Confirm the policy shows as Enabled in the Entra admin center
-Confirm target users are in scope
+Windows Hello does not need to be deployed to use passkeys.
+
+---
+
+### 🧪 Validation After Step 1
+
+- Confirm policy is **Enabled** in Entra admin center  
+- Confirm target users are in scope  
+- Have a pilot user go to:
+  - My Sign-ins → Security info  
+- Confirm:
+  - Passkey can be added  
+  - Sign-in works using Authenticator  
+
+---
+
+### ⚠️ Notes
+
+- Start with a pilot group  
+- Do not enforce Conditional Access yet  
+- Maintain recovery paths:
+  - Temporary Access Pass (TAP)  
+  - Break-glass account  
 
 Have a pilot user go to:
 
@@ -471,6 +493,20 @@ Two policies are used:
 - Validate passkey authentication
 - Allow fallback during testing
 - Identify issues before enforcement
+
+  ## ⚠️ Policy Interaction Consideration
+
+Ensure this policy does not conflict with:
+
+- Privileged access policies (YubiKey enforcement)
+- Legacy MFA policies
+- Other Conditional Access policies targeting all users (scope to security group with users for scaling)
+
+Conflicting policies may result in:
+
+- Unexpected MFA prompts
+- Authentication failures
+- Incorrect authentication method enforcement
 
 ---
 
@@ -905,3 +941,19 @@ A successful deployment ensures:
 - Smooth user experience  
 - Reliable recovery paths  
 
+---
+
+# 🧠 Architecture Summary
+
+```plaintext
+Standard Users:
+  → Authenticator passkeys (required)
+  → Windows Hello (optional)
+
+Privileged Users:
+  → YubiKey (separate policy)
+
+Fallback:
+  → Temporary Access Pass (TAP)
+  → Break-glass account
+```
