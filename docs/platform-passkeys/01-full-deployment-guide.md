@@ -36,6 +36,8 @@ This guide assumes:
 - Microsoft Authenticator is installed  
 - Testing is performed in a controlled environment
 
+---
+
 # 🧠 Platform Authentication Options
 
 This deployment supports multiple passkey methods:
