@@ -132,6 +132,6 @@ This repository provides a complete deployment, validation, and operational play
 
 ## 🚀 Start Here
 
-1. [Full Deployment Guide](docs/deployment/full-deployment-guide.md)
-2. [Prerequisites](docs/deployment/prerequisites.md)
-3. [PowerShell Setup](docs/deployment/powershell-setup.md)
+1. [Full Deployment Guide](docs/deployment/01-full-deployment-guide.md)
+2. [Prerequisites](docs/deployment/02-prerequisites.md)
+3. [YubiKey Enrollment](docs/deployment/03-yubikey-enrollment.md)
