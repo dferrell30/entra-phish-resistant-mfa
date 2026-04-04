@@ -267,15 +267,11 @@ If access is lost:
   
 ## ⚡ Best Practices
 
-<details> <summary><strong>Expand best practices</strong></summary>
-  
 - Always start in Report-only mode
 - Never remove fallback too early
 - Always test before enforcement
 - Maintain at least one recovery path
 - Use at least two YubiKeys for privileged users
-  
-</details> ```
 
 ---
 
