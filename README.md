@@ -1,12 +1,10 @@
 # 🔐 Entra Phishing-Resistant MFA (YubiKey) Playbook
 
-```md
+
 ![Entra](https://img.shields.io/badge/Microsoft-Entra-blue)
 ![Auth](https://img.shields.io/badge/Auth-FIDO2%20%7C%20YubiKey-green)
 ![Security](https://img.shields.io/badge/Security-Phishing--Resistant-purple)
 ![Status](https://img.shields.io/badge/Status-Lab%20→%20Production-orange)
-
-```
 
 # Entra Phishing-Resistant MFA
 
