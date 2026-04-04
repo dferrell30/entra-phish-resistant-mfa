@@ -602,11 +602,165 @@ $params = @{
 New-MgIdentityConditionalAccessPolicy -BodyParameter $params
 ```
 
+Microsoft recommends PowerShell 7+ for the Graph PowerShell SDK. Creating a Conditional Access policy with this cmdlet requires delegated permissions including Application.Read.All, Policy.ReadWrite.ConditionalAccess, and currently also Policy.Read.All for POST/PATCH operations
+
+What this script does
+
+Before you run it, know what it will create:
+
+- A Conditional Access policy named CA - Passkey - Standard Users (Lab)
+- State: Report-only (enabledForReportingButNotEnforced)
+- Scope: All users
+- Exclusion: your break-glass account
+- Apps: All cloud apps
+- Client apps: browser and mobile apps / desktop clients
+- Grant control: Require MFA
+
+### Step 1 — Install PowerShell 7
+
+Open PowerShell and check your version:
+
+$PSVersionTable.PSVersion
+
+Use PowerShell 7 or later. Microsoft recommends PowerShell 7+ for the Graph SDK. If you are on Windows PowerShell 5.1, it is still compatible, but PowerShell 7 is the better path.
+
+### Step 2 — Install the required Graph modules
+
+In PowerShell 7, run:
+
+```Powershell
+Install-Module Microsoft.Graph.Authentication -Scope CurrentUser
+Install-Module Microsoft.Graph.Identity.SignIns -Scope CurrentUser
+```
+
+Microsoft documents that you can install only the modules you need instead of the full Microsoft.Graph bundle.
+
+### Step 3 — Connect to Microsoft Graph with the right permissions
+
+Run:
+
+Connect-MgGraph -Scopes `
+  "Application.Read.All", `
+  "Policy.Read.All", `
+  "Policy.ReadWrite.ConditionalAccess"
+
+Then verify:
+
+Get-MgContext
+
+You should see your account and the consented scopes. Microsoft’s docs for New-MgIdentityConditionalAccessPolicy list those permissions, and Microsoft’s Graph known issues page notes that Policy.Read.All is currently still required for Conditional Access POST/PATCH operations.
+
+### Step 4 — Save the script to a file
+
+Save your script as something like:
+
+11-create-ca-passkey-lab.ps1
+
+Example contents:
+
+param(
+    [Parameter(Mandatory)]
+    [string]$BreakGlassObjectId
+)
+
+$params = @{
+    displayName = "CA - Passkey - Standard Users (Lab)"
+    state       = "enabledForReportingButNotEnforced"
+    conditions  = @{
+        users = @{
+            includeUsers = @("All")
+            excludeUsers = @($BreakGlassObjectId)
+        }
+        applications = @{
+            includeApplications = @("All")
+        }
+        clientAppTypes = @(
+            "browser",
+            "mobileAppsAndDesktopClients"
+        )
+    }
+    grantControls = @{
+        operator = "OR"
+        builtInControls = @("mfa")
+    }
+}
+
+New-MgIdentityConditionalAccessPolicy -BodyParameter $params
+
+### Step 5 — Get your break-glass account object ID
+
+You need the object ID, not just the UPN.
+
+You can get it with Graph like this:
+
+Invoke-MgGraphRequest -Method GET -Uri "https://graph.microsoft.com/v1.0/users/breakglass@yourtenant.onmicrosoft.com?`$select=id,displayName,userPrincipalName"
+
+Copy the id value.
+
+### Step 6 — Run the script
+
+If you are already in the folder where the script lives:
+
+.\11-create-ca-passkey-lab.ps1 -BreakGlassObjectId "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+
+If you are in the repo root and the script is under scripts\:
+
+.\scripts\11-create-ca-passkey-lab.ps1 -BreakGlassObjectId "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+
+### Step 7 — Confirm the policy was created
+
+Run:
+
+Get-MgIdentityConditionalAccessPolicy -All | Where-Object DisplayName -eq "CA - Passkey - Standard Users (Lab)"
+
+Microsoft documents Get-MgIdentityConditionalAccessPolicy for retrieving existing Conditional Access policies.
+
+### Step 8 — Verify it in the GUI
+
+Go to:
+
+Microsoft Entra admin center → Entra ID → Security → Conditional Access → Policies
+
+You should see:
+
+- CA - Passkey - Standard Users (Lab)
+- State: Report-only
+
+### Step 9 — Test before enabling anything
+
+Because this policy is report-only, it will not block users yet. Sign in with a test account and then review the sign-in logs to confirm the policy would apply as expected. Microsoft documents viewing applied Conditional Access policies through sign-in logs.
+
+### Step 10 — Common issues
+
+If Connect-MgGraph fails, usually it is one of these:
+
+wrong PowerShell version
+missing module
+missing consent for required scopes
+
+If New-MgIdentityConditionalAccessPolicy fails, usually it is one of these:
+
+missing Policy.Read.All
+missing Application.Read.All
+malformed body schema
+no break-glass exclusion value passed
+Best practice
+
+Keep this lab policy in Report-only until you have:
+
+a verified break-glass account
+pilot users enrolled
+successful sign-in log validation
+
+If you want, I can turn this into a clean markdown section you can paste directly under your “PowerShell (Lab Policy)” heading.
+
 ✅ Expected Result (Lab)
-MFA required
-Authenticator passkeys work
-Windows Hello works
-Password still allowed (fallback)
+
+- MFA required
+- Authenticator passkeys work
+- Windows Hello works
+- Password still allowed (fallback)
+
 🧪 Step 3B — Validate Lab Policy
 
 Test:
