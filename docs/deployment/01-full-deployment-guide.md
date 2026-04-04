@@ -44,6 +44,127 @@ This guide assumes:
 
 ---
 
+# ☁️ Defender for Cloud Apps Considerations
+
+> [!IMPORTANT]
+> Defender for Cloud Apps session controls can interfere with phishing-resistant authentication if not configured carefully.
+
+---
+
+## 🧠 Key Concept
+
+:contentReference[oaicite:0]{index=0} acts as a proxy when session controls are applied.
+
+This means:
+- Authentication traffic may be intercepted
+- FIDO2 (YubiKey) flows can be impacted
+
+---
+
+## ⚠️ Known Risks
+
+### Session Control + FIDO2
+
+If you enable:
+
+- Conditional Access App Control (session control)
+
+You may experience:
+
+- YubiKey prompts failing
+- Authentication loops
+- Unexpected sign-in behavior
+- Inconsistent MFA prompts
+
+---
+
+## 🚫 Do NOT apply session controls to:
+
+- Microsoft Entra admin center  
+- Azure portal  
+- Microsoft 365 admin center  
+
+👉 These are **critical admin surfaces** and must remain stable
+
+---
+
+## ✅ Recommended Approach
+
+### 1. Exclude Admin Roles from Session Control
+
+Ensure Conditional Access policies:
+
+- Targeting Defender for Cloud Apps
+- Exclude:
+  - Global Administrator
+  - Privileged roles
+
+---
+
+### 2. Use App Control Selectively
+
+Apply session controls only to:
+
+- High-risk SaaS apps
+- Non-admin user scenarios
+
+Examples:
+
+- Third-party SaaS apps
+- Data-sensitive applications
+
+---
+
+### 3. Test Before Enforcing
+
+Before enabling session control:
+
+- Validate YubiKey sign-in works
+- Test both:
+  - Browser login
+  - Device login
+
+---
+
+### 4. Monitor Sign-in Behavior
+
+Check:
+
+- Entra sign-in logs
+- Defender for Cloud Apps activity logs
+
+Look for:
+
+- Failed FIDO2 attempts
+- Interrupted authentication flows
+
+---
+
+## 🔍 Troubleshooting Indicators
+
+| Symptom | Possible Cause |
+|--------|--------------|
+| YubiKey prompt does not appear | Session proxy interfering |
+| Infinite login loop | App control misconfiguration |
+| MFA prompts inconsistent | Policy conflict |
+
+---
+
+## 🛡️ Best Practice Summary
+
+- Do not combine **phishing-resistant MFA enforcement** with aggressive session controls on admin apps  
+- Keep admin authentication paths **direct and uninterrupted**  
+- Apply Defender controls **after authentication**, not during  
+
+---
+
+## ⚡ Design Principle
+
+> Authentication should be **strong and direct**.  
+> Session control should be **selective and post-authentication**.
+
+---
+
 ## 📚 Supporting Documents
 
 Prerequisites
@@ -83,7 +204,6 @@ Verify Connection
 ```Powershell
 Get-MgContext
 ```
-
 ---
 
 ## 🚀 Step 2 — Execute Deployment Scripts
@@ -157,7 +277,7 @@ Find:
 
 Phishing-resistant MFA
 
-📌 Copy the id
+## 📌 Copy the id
 
 Create Phishing-Resistant Policy
 
@@ -167,13 +287,17 @@ Script:
 .\06-create-ca-privileged-phishing-resistant.ps1 `
   -BreakGlassObjectId "<object-id>" `
   -AuthenticationStrengthId "<strength-id>"
-Expected Result
+  
+Expected Result:
+
 Policy created in Report-only mode
+
 Enforces:
-YubiKey
-Windows Hello
+    - YubiKey
+    - Windows Hello
 Blocks:
-Microsoft Authenticator
+    - Microsoft Authenticator
+
 Validate in Sign-in Logs
 
 Navigate to:
@@ -182,36 +306,45 @@ Entra → Sign-in logs
 
 Confirm:
 
-Policy evaluation occurred
-Correct authentication method used
-✅ What Success Looks Like
-Lab policy allows both YubiKey and Authenticator
-Phishing-resistant policy blocks Authenticator
-YubiKey authentication succeeds consistently
-Break-glass account bypasses all Conditional Access policies
-Enable Policy
+- Policy evaluation occurred
+- Correct authentication method used
+
+---
+
+## ✅ What Success Looks Like
+
+- Lab policy allows both YubiKey and Authenticator
+- Phishing-resistant policy blocks Authenticator
+- YubiKey authentication succeeds consistently
+- Break-glass account bypasses all Conditional Access policies
+- Enable Policy
 
 Script:
 07-set-ca-policy-state.ps1
 
 .\07-set-ca-policy-state.ps1 `
   -DisplayName "CA - Privileged - Require Phishing-Resistant MFA" `
+  
   -State enabled
-⚠️ Critical Safety Checks
-✅ YubiKey is registered and working
-✅ Backup key is available (recommended)
-✅ Break-glass account is verified
-✅ Sign-in logs have been reviewed
-🛟 Recovery Options
-<details> <summary><strong>Expand recovery guidance</strong></summary>
+  
+## ⚠️ Critical Safety Checks
+
+- ✅ YubiKey is registered and working
+- ✅ Backup key is available (recommended)
+- ✅ Break-glass account is verified
+- ✅ Sign-in logs have been reviewed
+- 🛟 Recovery Options
+
+---
 
 If access is lost:
 
-Use break-glass account
-Use Temporary Access Pass (TAP)
-Re-register authentication methods
-</details>
-🛠️ Troubleshooting
+- Use break-glass account
+- Use Temporary Access Pass (TAP)
+- Re-register authentication methods
+
+## 🛠️ Troubleshooting
+
 Cannot connect to Graph
 Ensure required scopes are granted
 Re-run Connect-MgGraph
@@ -224,15 +357,19 @@ Ensure FIDO2/passkeys are enabled in Entra
 Locked out
 Use break-glass account
 Use Temporary Access Pass (TAP)
-🧠 Key Concepts
+
+## 🧠 Key Concepts
+
 Phase	Behavior
 Lab	MFA allows fallback (Authenticator permitted)
 Production	Only phishing-resistant methods allowed
-⚡ Best Practices
-<details> <summary><strong>Expand best practices</strong></summary>
+
+## ⚡ Best Practices
+
 Always start in Report-only mode
 Never remove fallback too early
 Always test before enforcement
 Maintain at least one recovery path
 Issue at least two YubiKeys for privileged users
-</details> ```
+
+---
