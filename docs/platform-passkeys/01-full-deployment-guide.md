@@ -162,7 +162,7 @@ Verify your connection:
 Get-MgContext
 ```
 
-Run the enable-passkeys command
+Run the enable-passkeys command:
 
 ```powershell
 Invoke-MgGraphRequest `
@@ -170,10 +170,6 @@ Invoke-MgGraphRequest `
   -Uri "https://graph.microsoft.com/v1.0/authenticationMethodsPolicy/authenticationMethodConfigurations/fido2" `
   -Body '{"state":"enabled"}' `
   -ContentType "application/json"
-Optional: verify the current configuration first
-Invoke-MgGraphRequest `
-  -Method GET `
-  -Uri "https://graph.microsoft.com/v1.0/authenticationMethodsPolicy/authenticationMethodConfigurations/fido2"
 ```
   
 Expected Result:
@@ -584,12 +580,15 @@ Entra → Sign-in logs
 
 Verify:
 
-Policy applied
-Authentication method used
+- Policy applied
+- Authentication method used
+
 🔐 Step 3C — Create Production Policy
+
 🎯 Purpose
-Enforce phishing-resistant authentication
-Block password-based sign-in
+- Enforce phishing-resistant authentication
+- Block password-based sign-in
+  
 📋 Policy Configuration (GUI)
 
 Go to:
@@ -658,170 +657,251 @@ $params = @{
 New-MgIdentityConditionalAccessPolicy -BodyParameter $params
 ```
 
-🧪 Step 3D — Validate Production Policy
+# ✅ Step 4 — Validation & Operations
 
-Test:
+This step ensures your deployment is working correctly and can be safely operated at scale.
 
-- Authenticator passkey login → ✅ works
-- Windows Hello login → ✅ works
-- Password login → ❌ blocked
+---
 
-🔍 Verify in Sign-in Logs
+## 🧪 Validation Overview
+
+Validation confirms:
+
+- Passkeys are being used successfully
+- Password-based authentication is blocked (production)
+- Policies are applied correctly
+- Users can recover access if needed
+
+---
+
+## 🧪 Step 4A — Functional Testing
+
+### Test 1 — Authenticator Passkey
+
+1. Open a new browser session (InPrivate / Incognito)
+2. Navigate to a Microsoft 365 or Entra resource
+3. Sign in
+
+✅ Expected:
+
+- Passkey prompt appears
+- Authenticator prompts on phone
+- User signs in with biometric or PIN
+- No password prompt
+
+---
+
+### Test 2 — Windows Hello (Optional)
+
+1. Sign in from a Windows device
+2. Use Windows Hello
+
+✅ Expected:
+
+- Hello prompt appears
+- No password required
+- Sign-in successful
+
+---
+
+### Test 3 — Password Block (Production Only)
+
+1. Attempt password sign-in
+2. Enter credentials
+
+❌ Expected:
+
+- Sign-in blocked
+- Policy requires phishing-resistant authentication
+
+---
+
+## 🔍 Step 4B — Sign-in Log Validation
+
+Go to:
+
+**Entra ID → Monitoring → Sign-in logs**
 
 Check:
 
-- Authentication method = Passkey / FIDO2
-- Policy result = Success
-- No fallback methods used
+### Authentication Details
 
-🚀 Step 3E — Enable Production Policy
-
-Only after validation:
-
-GUI
-Open policy
-Set:
-Enable = On
-
-```PowerShell
-Update-MgIdentityConditionalAccessPolicy `
-  -ConditionalAccessPolicyId "<policy-id>" `
-  -BodyParameter @{ state = "enabled" }
-```
-  
-⚠️ Critical Safety Checks
-
-Before enabling:
-
-- Users are enrolled in passkeys
-- Break-glass account tested
-- TAP available
-- Sign-in logs reviewed
-- No conflicting policies
-
-🧠 Architecture Notes
-Standard Users:
-  → Passkeys (Authenticator required)
-  → Windows Hello (optional)
-
-Privileged Users:
-  → YubiKey (separate policy)
-  
-⚡ Best Practices
-- Use pilot group first
-- Never enforce without validation
-- Keep admin and user policies separate
-- Monitor sign-in logs continuously
-- Avoid mixing authentication methods in one policy
+- Method:
+  - Passkey
+  - FIDO2
+- Authentication requirement:
+  - Phishing-resistant MFA
 
 ---
 
-# 🔥 What you now have
+### Conditional Access
 
-You now built:
-
-- Step 1 → Enable passkeys ✅  
-- Step 2 → User enrollment ✅  
-- Step 3 → Conditional Access ✅  
-
-👉 This is now a **complete deployment path**
+- Policy applied:
+  - Passkey policy
+- Result:
+  - Success
 
 ---
 
-# 👍 Next step (final)
+### Risk Indicators (if P2)
 
-If you want to finish the set:
-
-👉 say  
-**“build step 4 validation + operations”**
-
-and I’ll give you:
-- full validation guide
-- operational lifecycle (lost device, reset, etc.)
-- enterprise-grade finishing touches
-
----
-  
-# 🧪 Step 5 — Validate Authentication
-
-Test:
-
-- Authenticator passkey login
-- Windows Hello login
-- Sign-in logs show correct method
+- Sign-in risk
+- User risk
 
 ---
 
-# 🔐 Step 6 — Deploy Production Policy
+## 📊 Step 4C — What Success Looks Like
 
-Run:
+- Users sign in without passwords  
+- Authenticator passkeys work consistently  
+- Windows Hello works (if configured)  
+- Password and legacy auth blocked  
+- No unexpected MFA prompts  
 
-```Powershell
-.\scripts\12-create-ca-passkey-production.ps1
-```
+---
 
-Expected Result:
+# 🛠️ Operational Guidance
 
-- Phishing-resistant authentication enforced
-- Password-based login blocked
-- Only passkey methods allowed
-  
-# ✅ What Success Looks Like
+---
 
-- Users sign in without passwords
-- Authenticator passkeys work consistently
-- Windows Hello works
-- Legacy authentication is blocked
+## 🔄 Passkey Lifecycle
 
-# ⚠️ Critical Safety Checks
+### New User
 
-Before enforcement:
+- Enroll via Authenticator
+- (Optional) Configure Windows Hello
+- Validate login
 
-- Users enrolled with passkeys
-- Break-glass account verified
-- TAP available for recovery
-- Policies tested in report-only
-  
-# 🛟 Recovery Options
+---
 
-If access is lost:
+### Lost Phone
 
-- Temporary Access Pass (TAP)
+1. Issue **Temporary Access Pass (TAP)**
+2. User signs in
+3. Re-register passkey
+
+---
+
+### New Device
+
+1. Sign in using existing method or TAP
+2. Register new passkey
+3. Remove old device if needed
+
+---
+
+### Device Replacement
+
 - Re-register passkey
-- Use break-glass account
-  
-# 🛠️ Troubleshooting
+- Validate authentication
+- Remove old credentials
 
-- Passkey not prompting
-- Ensure device supports FIDO2
-- Verify Authenticator installed
-- Check browser compatibility
-- Policy not applying
-- Review Conditional Access targeting
-- Verify group membership
-- Login loop
-- Check for conflicting policies
-- Review session controls
-  
-# 🧠 Architecture Notes
+---
 
-This deployment is intended for:
+## 🔐 Break-Glass Account
 
-Standard Users:
-  → Authenticator passkeys
-  → Windows Hello
+Ensure:
 
-Privileged Users:
-  → YubiKey (separate deployment)
-  
-# ⚡ Best Practices
+- Excluded from all Conditional Access policies
+- Uses strong password
+- Stored securely
+- Tested regularly
 
-- Start in report-only mode
-- Do not force passkeys immediately
-- Always maintain recovery path
-- Recommend Windows Hello for redundancy
-- Validate user experience before enforcement
+---
 
-# 🧾 Licensing Requirement
-- Entra ID P1 required
-- Entra ID P2 optional (for risk-based policies)
+## 🔑 Temporary Access Pass (TAP)
+
+Use TAP for:
+
+- Initial enrollment
+- Recovery scenarios
+- Device replacement
+
+---
+
+## 🔁 Passkey Reset (User)
+
+Users can:
+
+1. Go to:
+
+   https://mysignins.microsoft.com/security-info
+
+2. Remove existing passkey
+3. Add new passkey
+
+---
+
+## 🔍 Monitoring & Maintenance
+
+Regularly review:
+
+- Sign-in logs
+- Conditional Access insights
+- Authentication methods usage
+
+---
+
+## ⚠️ Common Issues
+
+### User cannot sign in
+
+- Passkey not registered
+- Device unavailable
+- Policy enforced too early
+
+👉 Fix:
+- Issue TAP
+- Re-register passkey
+
+---
+
+### Passkey prompt not appearing
+
+- Device not supported
+- Authenticator not configured
+- Policy misconfiguration
+
+---
+
+### Unexpected MFA prompts
+
+- Conflicting policies
+- Incorrect authentication strength
+
+---
+
+## 🧠 Operational Best Practices
+
+- Enroll users before enforcement  
+- Use pilot groups  
+- Maintain recovery paths (TAP + break-glass)  
+- Recommend Windows Hello for redundancy  
+- Monitor logs continuously  
+
+---
+
+## 🏁 Final Validation Checklist
+
+Before full rollout:
+
+- [ ] Passkeys enabled in tenant  
+- [ ] Users enrolled  
+- [ ] Lab policy validated  
+- [ ] Production policy tested (report-only)  
+- [ ] Break-glass account verified  
+- [ ] TAP tested  
+- [ ] Sign-in logs reviewed  
+
+---
+
+## 📌 Final Note
+
+Passkeys provide phishing-resistant, passwordless authentication that replaces traditional MFA flows.
+
+A successful deployment ensures:
+
+- Strong authentication  
+- Smooth user experience  
+- Reliable recovery paths  
+
