@@ -228,28 +228,213 @@ Notes:
 
 ---
 
-# 👤 Step 2 — User Enrollment
+# 👤 Step 2 — User Enrollment (Passkeys)
 
-Users must enroll in at least one supported passkey method.
+This step ensures users register a passkey so they can authenticate without passwords.
 
-### Required for this deployment
+> [!IMPORTANT]
+> For this deployment:
+> - **Microsoft Authenticator passkeys are required**
+> - **Windows Hello for Business is optional but recommended**
 
-#### Microsoft Authenticator
+---
 
-1. Install Microsoft Authenticator  
-2. Add work account  
-3. Register passkey  
-4. Configure biometric or PIN  
+## 🧠 Enrollment Overview
 
-### Optional but Recommended
+Users must register at least one passkey method:
 
-#### Windows Hello for Business
+| Method | Required | Notes |
+|------|--------|------|
+| Microsoft Authenticator passkey | ✅ Yes | Primary method |
+| Windows Hello for Business | ⚠️ Optional | Recommended for redundancy |
 
-1. Configure Windows Hello for Business  
-2. Set PIN or biometric  
-3. Register device  
+---
 
-Windows Hello is not required for this deployment, but it is recommended to improve user experience and recovery resilience on Windows devices.
+## 📱 Option A — Microsoft Authenticator (Required)
+
+This is the **primary enrollment path** for all users.
+
+---
+
+### Prerequisites
+
+- Microsoft Authenticator installed
+- Work account added to the app
+- Device has biometric or PIN configured
+- Internet connectivity
+
+---
+
+### Step-by-Step (User Flow)
+
+1. Open **Microsoft Authenticator**
+2. Add your **work or school account** (if not already added)
+3. When prompted, choose:
+
+   **Set up passkey**
+
+4. Follow prompts to:
+
+   - Enable passkey
+   - Confirm identity
+   - Register biometric (Face ID / fingerprint) or device PIN
+
+5. Complete registration
+
+---
+
+### Alternative Enrollment Path (Manual)
+
+Users can also:
+
+1. Go to:
+
+   **https://mysignins.microsoft.com/security-info**
+
+2. Click:
+
+   **Add sign-in method**
+
+3. Select:
+
+   **Passkey (preview) / FIDO2 security key**
+
+4. Choose:
+
+   **Use your phone (Authenticator)**
+
+5. Follow prompts to complete registration
+
+---
+
+### Expected Result
+
+- Passkey successfully registered
+- Authenticator prompts appear during sign-in
+- User can authenticate using phone biometric or PIN
+
+---
+
+## 💻 Option B — Windows Hello for Business (Optional)
+
+This provides **device-based passkeys** on Windows systems.
+
+---
+
+### When to use
+
+- Corporate-managed devices
+- Windows-first environments
+- Additional redundancy (recommended)
+
+---
+
+### Step-by-Step
+
+1. On a Windows device, go to:
+
+   **Settings → Accounts → Sign-in options**
+
+2. Configure:
+
+   - Windows Hello PIN
+   - Biometric (fingerprint or facial recognition)
+
+3. Ensure device is:
+
+   - Azure AD joined or Entra joined
+   - Compliant (if required by policy)
+
+4. Complete setup
+
+---
+
+### Expected Result
+
+- User can sign in using Windows Hello
+- Passkey authentication works without phone
+- Provides fallback if mobile device is unavailable
+
+---
+
+## 🧪 Validation — Enrollment Success
+
+After enrollment, test the following:
+
+### Test 1 — Authenticator Passkey
+
+- Open a new browser session
+- Sign in to Microsoft 365 or Entra portal
+- Confirm:
+  - Passkey prompt appears
+  - Authenticator approval works
+
+---
+
+### Test 2 — Windows Hello (if configured)
+
+- Sign in on Windows device
+- Confirm:
+  - Hello prompt appears
+  - Authentication succeeds without password
+
+---
+
+## 🔍 Verify in Sign-in Logs
+
+Go to:
+
+**Entra ID → Sign-in logs**
+
+Confirm:
+
+- Authentication method shows:
+  - Passkey
+  - FIDO2
+- Policy evaluation is successful
+
+---
+
+## ⚠️ Common Issues
+
+### Passkey option not available
+
+- Ensure FIDO2/passkeys are enabled (Step 1)
+- Verify user is in scope of policy
+
+---
+
+### Authenticator not prompting
+
+- Confirm app is installed and signed in
+- Check notifications are enabled
+- Ensure device has biometric or PIN configured
+
+---
+
+### Windows Hello not working
+
+- Verify device is Entra joined
+- Ensure Hello is configured
+- Confirm policy allows Hello
+
+---
+
+## 🛟 Recovery Considerations
+
+If a user cannot enroll or loses access:
+
+- Use **Temporary Access Pass (TAP)**
+- Re-register passkey
+- Use break-glass account (admin only)
+
+---
+
+## 🧠 Key Takeaways
+
+- Authenticator passkeys are the **required enrollment path**
+- Windows Hello is **optional but strongly recommended**
+- Users should have **at least one working passkey before enforcement**
 
 ---
 
