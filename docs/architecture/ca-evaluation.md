@@ -2,20 +2,20 @@
 
 ```mermaid
 flowchart TD
-    A[User Sign-In] --> B{Break-glass account?}
-    B -->|Yes| C[Excluded from Conditional Access]
-    B -->|No| D[Evaluate Conditional Access Policies]
+    A[User Sign-In] --> B{Break-glass?}
+    B -->|Yes| C[Bypass CA]
+    B -->|No| D[Evaluate Policies]
 
     D --> E{Policy Type}
     E -->|Lab| F[Require MFA]
     E -->|Production| G[Require Phishing-Resistant MFA]
 
-    F --> H{Authentication Method}
-    H -->|YubiKey| I[Access Allowed]
+    F --> H{Method}
+    H -->|YubiKey| I[Allow]
     H -->|Authenticator| I
-    H -->|Windows Hello| I
+    H -->|Hello| I
 
-    G --> J{Authentication Method}
-    J -->|YubiKey| K[Access Allowed]
-    J -->|Windows Hello| K
-    J -->|Authenticator| L[Access Blocked]
+    G --> J{Method}
+    J -->|YubiKey| K[Allow]
+    J -->|Hello| K
+    J -->|Authenticator| L[Block]
