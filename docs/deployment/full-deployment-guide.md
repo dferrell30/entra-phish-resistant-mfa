@@ -1,3 +1,7 @@
+# 🧰 Full Deployment Guide
+
+Table of Contents
+
 - [Critical Safety Checks](#-critical-safety-checks)
 - [Recovery Options](#-recovery-options)
 - [Key Concepts](#-key-concepts)
