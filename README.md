@@ -53,23 +53,40 @@ This repository provides a complete deployment, validation, and operational play
 
 ## 📚 Documentation
 
-### 🔧 Deployment
+<details>
+<summary><strong>🔧 Deployment</strong></summary>
+
 - [Prerequisites](docs/deployment/prerequisites.md)
 - [YubiKey Enrollment](docs/deployment/yubikey-enrollment.md)
 - [Conditional Access](docs/deployment/conditional-access.md)
 
-### 🔐 Policies
+</details>
+
+<details>
+<summary><strong>🔐 Policies</strong></summary>
+
 - [Privileged (Lab Mode)](docs/policies/ca-privileged-lab.md)
 - [Privileged (Phishing-Resistant)](docs/policies/ca-privileged-phishing-resistant.md)
 
-### 🛠 Operations
+</details>
+
+<details>
+<summary><strong>🛠 Operations</strong></summary>
+
 - [YubiKey Reset](docs/operations/yubikey-reset.md)
 - [Break-Glass Account](docs/operations/break-glass.md)
 - [Recovery (TAP)](docs/operations/recovery.md)
+- [Lifecycle Management](docs/operations/lifecycle.md)
 
-### ✅ Validation
+</details>
+
+<details>
+<summary><strong>✅ Validation</strong></summary>
+
 - [Testing Plan](docs/validation/testing.md)
 - [Sign-in Logs](docs/validation/sign-in-logs.md)
+
+</details>
 
 ---
 
@@ -85,11 +102,23 @@ This repository provides a complete deployment, validation, and operational play
 
 ## 🧠 Design Philosophy
 
-### Lab Phase
-- Flexibility (Authenticator allowed)
+<details>
+<summary><strong>Lab Phase</strong></summary>
 
-### Production Phase
-- Enforcement (YubiKey / Windows Hello only)
+- Flexibility
+- Authenticator allowed as fallback
+- Safer for initial rollout and hardware testing
+
+</details>
+
+<details>
+<summary><strong>Production Phase</strong></summary>
+
+- Enforce phishing-resistant MFA
+- Allow YubiKey or Windows Hello only
+- Remove dependency on weaker fallback methods
+
+</details>
 
 ---
 
@@ -97,4 +126,4 @@ This repository provides a complete deployment, validation, and operational play
 
 - ✔ Lab-ready  
 - ✔ Enterprise-ready  
-- ✔ Zero Trust aligned  
+- ✔ Zero Trust aligned
