@@ -23,30 +23,43 @@ flowchart TD
     C --> G[Access Granted]
     D --> G
     F --> G
+```
+
 📱 Step 1 — Install Microsoft Authenticator
+
 Download Microsoft Authenticator:
 iPhone → App Store
 Android → Google Play
 Open the app
+
 🔑 Step 2 — Add Your Work Account
+
 Tap + Add account
 Select Work or school account
 Choose Scan QR code
 Follow sign-in instructions
+
 ✅ Expected Result
+
 Your account appears in the app
 You can receive sign-in prompts
+
 🔐 Step 3 — Set Up MFA
+
 Sign in to your account
 Choose Approve request
 Approve notification on your phone
+
 🔁 Manual Setup (if needed)
+
 Go to:
 https://mysignins.microsoft.com/security-info
 Click Add sign-in method
 Select Authenticator app
 Scan QR code
+
 🔑 Step 4 — Register a Passkey
+
 Go to:
 https://mysignins.microsoft.com/security-info
 Click Add sign-in method
@@ -57,9 +70,11 @@ Use your phone
 Follow prompts:
 Approve in Authenticator
 Use Face ID / fingerprint / PIN
+
 ✅ Expected Result
 Passkey is registered
 No password required for sign-in
+
 💻 Step 5 — (Optional) Set Up Windows Hello
 
 ⚠️ Recommended but not required
@@ -69,8 +84,10 @@ Settings → Accounts → Sign-in options
 Configure:
 PIN
 Fingerprint or facial recognition
+
 🧪 Step 6 — Test Your Sign-In
 ✅ Passkey Test (Recommended)
+
 Open a private browser
 Sign in to Microsoft 365
 
@@ -85,7 +102,9 @@ Approve notification
 ✅ Windows Hello Test (Optional)
 Sign in on device
 Use biometric or PIN
+
 ⚠️ Troubleshooting
+
 <details> <summary><strong>Click to expand</strong></summary>
 No Authenticator prompt
 Ensure app is installed
@@ -99,6 +118,7 @@ Cannot sign in
 Use backup method
 Contact IT
 </details>
+
 🛟 Recovery Options
 Contact IT support
 Request Temporary Access Pass (TAP)
@@ -186,4 +206,5 @@ https://mysignins.microsoft.com/security-info
 ## 🔐 Reminder
 
 - Never approve unexpected sign-ins  
-- Keep your device secure  
+- Keep your device secure
+```
