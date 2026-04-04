@@ -1,24 +1,20 @@
-# Authentication Flow
 
-```mermaid
-flowchart TD
-    A[User starts sign-in] --> B{Conditional Access applies?}
-    B -->|No| C[Standard Entra sign-in]
-    B -->|Yes| D{Policy type}
-    D -->|Lab policy| E[Require MFA]
-    D -->|Privileged production| F[Require authentication strength: Phishing-resistant MFA]
+GitHub renders Mermaid natively, so these are usually better than static PNGs for this kind of repo.
 
-    E --> G{Allowed methods}
-    G -->|YubiKey| H[FIDO2 PIN + touch]
-    G -->|Authenticator| I[Push / number match]
-    G -->|Windows Hello| J[Hello for Business]
+## Automation scripts
 
-    F --> K{Allowed methods}
-    K -->|YubiKey| H
-    K -->|Windows Hello| J
-    K -->|Authenticator| L[Blocked]
+Microsoft Graph PowerShell currently supports Conditional Access policy creation with the `Microsoft.Graph.Identity.SignIns` module, and Microsoft’s authentication guidance recommends using Graph scopes appropriate to the action. Microsoft also documents `Update` support for the FIDO2/passkey authentication method policy through Graph. :contentReference[oaicite:1]{index=1}
 
-    H --> M[Access granted]
-    I --> M
-    J --> M
-    L --> N[Access denied]
+### `scripts/prerequisites.ps1`
+
+```powershell
+# Connect to Microsoft Graph with the scopes needed for CA and auth method work
+$scopes = @(
+    "Policy.Read.All",
+    "Policy.ReadWrite.ConditionalAccess",
+    "Policy.ReadWrite.AuthenticationMethod",
+    "Directory.Read.All"
+)
+
+Connect-MgGraph -Scopes $scopes
+Get-MgContext
