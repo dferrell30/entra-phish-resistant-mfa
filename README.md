@@ -62,6 +62,43 @@ It is especially useful for environments that:
 
 This solution focuses on enforcing phishing-resistant MFA using FIDO2 security keys, Conditional Access, and controlled fallback mechanisms.
 
+## 🚀 Deployment Walkthrough (Recommended Order)
+
+This section outlines a safe, phased approach to deploying phishing-resistant MFA.
+
+### Phase 1 — Preparation
+
+- identify pilot users (admins first)
+- confirm break-glass accounts exist and are excluded
+- enable FIDO2 authentication method
+- configure Temporary Access Pass (TAP)
+
+### Phase 2 — Pilot Deployment
+
+- issue FIDO2 keys to pilot group
+- require phishing-resistant MFA for pilot users (report-only first)
+- validate sign-in logs and behavior
+
+### Phase 3 — Controlled Enforcement
+
+- switch Conditional Access policy from report-only → on
+- expand to high-risk users (admins, finance, execs)
+- monitor for failures or lockouts
+
+### Phase 4 — Broader Rollout
+
+- expand to additional user groups in phases
+- reduce reliance on legacy MFA methods
+- enforce device compliance where applicable
+
+### Phase 5 — Validation & Monitoring
+
+- review sign-in logs for authentication method usage
+- confirm phishing-resistant MFA adoption
+- identify gaps or fallback usage
+
+> ⚠️ Always test with a small group before full enforcement to avoid tenant lockout.
+
 ### 🔐 Authentication Flow
 
 ![Authentication Flow](./diagrams/authentication-flow.png)
