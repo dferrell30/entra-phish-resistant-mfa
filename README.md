@@ -97,6 +97,15 @@ This section outlines a safe, phased approach to deploying phishing-resistant MF
 - confirm phishing-resistant MFA adoption
 - identify gaps or fallback usage
 
+## ⚠️ Common Pitfalls
+
+- enforcing phishing-resistant MFA before users register FIDO2 keys
+- not excluding break-glass accounts
+- enabling policies without report-only validation
+- not validating fallback authentication paths
+
+> Misconfiguration can result in tenant lockout. Always validate in a pilot group first.
+
 > ⚠️ Always test with a small group before full enforcement to avoid tenant lockout.
 
 ### 🔐 Authentication Flow
