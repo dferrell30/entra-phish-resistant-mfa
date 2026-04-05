@@ -12,6 +12,11 @@
 
 </div>
 
+## 🚀 Start Here
+
+> Review architecture  
+> Follow deployment walkthrough for Yubikey or Microsoft Authenitcator Passkey 
+> Validate using sign-in logs  
 > 🚀 **Start here:** [Full Deployment Guide](./docs/deployment/01-full-deployment-guide.md)  
 > 📋 [Prerequisites](./docs/deployment/02-prerequisites.md)  
 > 🔑 [YubiKey Enrollment](./docs/deployment/03-yubikey-enrollment.md)  
