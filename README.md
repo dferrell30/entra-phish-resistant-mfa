@@ -1,5 +1,7 @@
 # 🔐 Entra Phishing-Resistant MFA Playbook (YubiKey & Microsoft Authenticator Passkey)
 
+This project shows how to deploy phishing-resistant MFA using FIDO2, Conditional Access, and Temporary Access Pass (TAP).
+
 > I built this to better understand how phishing-resistant MFA is actually deployed in real environments—not just how it’s documented.
 
 <div align="left">
