@@ -1,6 +1,6 @@
 # 🔐 Entra Phishing-Resistant MFA Playbook (YubiKey & Microsoft Authenticator Passkey)
 
-> This started as a way to sanity check how phishing-resistant MFA is actually deployed in real environments—not just how it’s documented.
+> I built this to better understand how phishing-resistant MFA is actually deployed in real environments—not just how it’s documented.
 
 <div align="left">
 
