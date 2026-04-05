@@ -42,6 +42,20 @@ By enforcing strong authentication methods like FIDO2 security keys and tightly 
 
 This project is focused on making that practical—not just configured, but validated and operational.
 
+## 👥 Who This Is For
+
+This project is designed for:
+
+- security engineers implementing Conditional Access
+- identity architects deploying phishing-resistant MFA
+- SOC teams validating authentication posture
+- organizations moving toward Zero Trust
+
+It is especially useful for environments that:
+- already use Microsoft Entra ID
+- want to eliminate phishing-based compromise paths
+- need a structured approach to FIDO2 rollout
+
 ---
 
 ## 🖼️ Architecture Overview
