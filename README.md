@@ -1,5 +1,7 @@
 # 🔐 Entra Phishing-Resistant MFA Playbook (YubiKey & Microsoft Authenticator Passkey)
 
+> This started as a way to sanity check how phishing-resistant MFA is actually deployed in real environments—not just how it’s documented.
+
 <div align="left">
 
 [![Microsoft Entra](https://img.shields.io/badge/Microsoft-Entra-blue)](./docs/deployment/01-full-deployment-guide.md)
