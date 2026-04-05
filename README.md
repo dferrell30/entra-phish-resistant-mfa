@@ -27,6 +27,37 @@ A deployment and operations playbook for implementing **phishing-resistant authe
 
 ---
 
+## 🧠 Why This Matters
+
+In many environments, MFA is enabled—but still vulnerable to phishing, token theft, and session replay.
+
+I’ve seen cases where:
+- MFA was technically enforced but still bypassed
+- users approved malicious prompts
+- legacy authentication created unexpected gaps
+
+Phishing-resistant MFA changes that.
+
+By enforcing strong authentication methods like FIDO2 security keys and tightly controlling fallback mechanisms, you significantly reduce the risk of credential-based attacks.
+
+This project is focused on making that practical—not just configured, but validated and operational.
+
+---
+
+## 🖼️ Architecture Overview
+
+This solution focuses on enforcing phishing-resistant MFA using FIDO2 security keys, Conditional Access, and controlled fallback mechanisms.
+
+### 🔐 Authentication Flow
+
+![Authentication Flow](./diagrams/authentication-flow.png)
+
+### 🛡️ Conditional Access Design
+
+![Conditional Access](./diagrams/conditional-access.png)
+
+---
+
 ## 📚 Quick Navigation
 
 | Section | Link |
