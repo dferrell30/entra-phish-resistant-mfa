@@ -1,5 +1,16 @@
 # 🔐 Entra Phishing-Resistant MFA Playbook (YubiKey & Microsoft Authenticator Passkey)
 
+## 🧠 Overview
+
+This repository provides a production-ready design and deployment playbook for phishing-resistant authentication in Microsoft Entra ID.
+
+It demonstrates how to:
+
+- Protect privileged accounts using hardware-backed authentication (YubiKey)
+- Enable passwordless authentication for standard users using passkeys
+- Enforce authentication using Conditional Access and authentication strengths
+- Maintain secure recovery using Temporary Access Pass (TAP) and break-glass accounts
+
 This project shows how to deploy phishing-resistant MFA using FIDO2, Conditional Access, and Temporary Access Pass (TAP).
 
 > I built this to better understand how phishing-resistant MFA is actually deployed in real environments—not just how it’s documented.
