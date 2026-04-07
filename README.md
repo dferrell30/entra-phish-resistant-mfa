@@ -24,17 +24,8 @@ This design:
 - Enforces phishing-resistant authentication methods
 - Separates controls based on user risk level
   
-> I built this to better understand how phishing-resistant MFA is actually deployed in real environments—not just how it’s documented.
+> I built this to better understand how phishing-resistant MFA is actually deployed in real environments—not just how it’s documented. Thank you for taking the time to look through this solution.
 
-<div align="left">
-
-[![Microsoft Entra](https://img.shields.io/badge/Microsoft-Entra-blue)](./docs/deployment/01-full-deployment-guide.md)
-[![Auth](https://img.shields.io/badge/Auth-FIDO2%20%7C%20YubiKey-green)](./docs/deployment/01-full-deployment-guide.md)
-[![Passwordless](https://img.shields.io/badge/Auth-Passkeys%20%7C%20Passwordless-blueviolet)](./docs/platform-passkeys/01-full-deployment-guide.md)
-[![Security](https://img.shields.io/badge/Security-Phishing--Resistant-purple)](./docs/policies/ca-privileged-phish-resistant.md)
-[![Status](https://img.shields.io/badge/Status-Lab%20to%20Production-orange)](./docs/deployment/01-full-deployment-guide.md)
-
-</div>
 
 ## 🚀 Start Here
 
@@ -46,6 +37,16 @@ This design:
 > 📋 [Prerequisites](./docs/deployment/02-prerequisites.md)  
 > 🔑 [YubiKey Enrollment](./docs/deployment/03-yubikey-enrollment.md)  
 > 📱 [Passkey Deployment Guide](./docs/platform-passkeys/01-full-deployment-guide.md)
+
+<div align="left">
+
+[![Microsoft Entra](https://img.shields.io/badge/Microsoft-Entra-blue)](./docs/deployment/01-full-deployment-guide.md)
+[![Auth](https://img.shields.io/badge/Auth-FIDO2%20%7C%20YubiKey-green)](./docs/deployment/01-full-deployment-guide.md)
+[![Passwordless](https://img.shields.io/badge/Auth-Passkeys%20%7C%20Passwordless-blueviolet)](./docs/platform-passkeys/01-full-deployment-guide.md)
+[![Security](https://img.shields.io/badge/Security-Phishing--Resistant-purple)](./docs/policies/ca-privileged-phish-resistant.md)
+[![Status](https://img.shields.io/badge/Status-Lab%20to%20Production-orange)](./docs/deployment/01-full-deployment-guide.md)
+
+</div>
 
 ---
 
