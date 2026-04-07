@@ -368,9 +368,9 @@ Never enforce globally without validation.
 
 ## ⚠️ Disclaimer
 
-This tool is provided for **educational, testing, and security validation purposes only**.
+This information and scripting is provided for **educational, testing, and security validation purposes only**.
 
-Use of this tool should be limited to:
+Use of this information and scripting should be limited to:
 - Authorized environments  
 - Lab or approved enterprise systems  
 
