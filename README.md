@@ -11,7 +11,7 @@ It demonstrates how to:
 - Enforce authentication using Conditional Access and authentication strengths
 - Maintain secure recovery using Temporary Access Pass (TAP) and break-glass accounts
 
-This project shows how to deploy phishing-resistant MFA using FIDO2, Conditional Access, and Temporary Access Pass (TAP).
+This approach aligns with Zero Trust principles and eliminates password-based authentication risks.
 
 ## 🎯 What This Solves
 
