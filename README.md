@@ -1,461 +1,365 @@
-# 🔐 Entra Phishing-Resistant MFA
-
-A practical, production-ready guide to implementing phishing-resistant MFA in Microsoft Entra using Conditional Access and FIDO2 authentication.
-
-## 📚 Table of Contents
-- [Why This Matters](#-why-this-matters)
-- [The Problem](#-the-problem)
-- [The Solution](#-the-solution)
-- [Implementation](#️-implementation)
-- [Validation](#-validation--testing)
-- [Common Mistakes](#-common-mistakes)
-- [Use Cases](#-real-world-use-cases)
-- [Architecture](#-authentication-flow)
-- [Next Steps](#-next-steps)
-
-## ⚠️ Why Phishing-Resistant MFA Matters
-
-Traditional MFA methods (SMS, push notifications, OTP) are vulnerable to:
-
-- Adversary-in-the-Middle (AiTM) phishing attacks  
-- MFA fatigue / push bombing  
-- Token theft and replay  
-
-Phishing-resistant MFA (FIDO2, Windows Hello for Business, Certificate-based auth) eliminates these attack paths by binding authentication to the device and origin.
-
-## ⚠️ Why This Matters (ADD THIS — before your guide)
-
-👉 This goes BEFORE everything you already wrote
-
-## 🚨 The Problem (ADD)
-
-Explain:
-
-MFA fatigue
-AiTM attacks
-
-## 🛡️ The Solution (ADD)
-
-Explain:
-
-Authentication strengths
-FIDO2 / WHfB
-
-This guide shows how to enforce phishing-resistant MFA in Microsoft Entra using Conditional Access.
-
-<div align="left">
-
-[![Microsoft Entra](https://img.shields.io/badge/Microsoft-Entra-blue)](./docs/deployment/01-full-deployment-guide.md)
-[![Auth](https://img.shields.io/badge/Auth-FIDO2%20%7C%20YubiKey-green)](./docs/deployment/01-full-deployment-guide.md)
-[![Passwordless](https://img.shields.io/badge/Auth-Passkeys%20%7C%20Passwordless-blueviolet)](./docs/platform-passkeys/01-full-deployment-guide.md)
-[![Security](https://img.shields.io/badge/Security-Phishing--Resistant-purple)](./docs/policies/ca-privileged-phish-resistant.md)
-[![Status](https://img.shields.io/badge/Status-Lab%20to%20Production-orange)](./docs/deployment/01-full-deployment-guide.md)
-
-</div>
-
 # 🔐 Entra Phishing-Resistant MFA Implementation Guide
 
-<div align="left">
-  
-[![PowerShell](https://img.shields.io/badge/PowerShell-Ready-blue)
-[![Microsoft Entra](https://img.shields.io/badge/Microsoft-Entra-purple)
-[![Security](https://img.shields.io/badge/Security-Zero%20Trust-green)
-
-</div>
+A practical, production-ready guide to implementing phishing-resistant MFA in Microsoft Entra using Conditional Access, authentication strengths, and FIDO2 (YubiKey/passkeys).
 
 ---
-
-## 🧠 Overview
-
-This repository provides a production-ready design and deployment playbook for phishing-resistant authentication in Microsoft Entra ID.
-
-It demonstrates how to:
-
-- Protect privileged accounts using hardware-backed authentication (YubiKey)
-- Enable passwordless authentication for standard users using passkeys
-- Enforce authentication using Conditional Access and authentication strengths
-- Maintain secure recovery using Temporary Access Pass (TAP) and break-glass accounts
-
-This approach aligns with Zero Trust principles and eliminates password-based authentication risks.
-
-## 🎯 What This Solves
-
-Traditional MFA methods (push, SMS, OTP) are vulnerable to phishing.
-
-This design:
-
-- Eliminates password reliance
-- Prevents credential replay attacks
-- Enforces phishing-resistant authentication methods
-- Separates controls based on user risk level
-  
-> I built this to better understand how phishing-resistant MFA is actually deployed in real environments—not just how it’s documented. Thank you for taking the time to look through this solution.
-
-
-## 🚀 Start Here
-
-> Review architecture  
-> Follow deployment walkthrough for Yubikey or Microsoft Authenitcator Passkey 
-> Validate using sign-in logs
-  
-> 🚀 **Start here:** [Full Deployment Guide](./docs/deployment/01-full-deployment-guide.md)  
-> 📋 [Prerequisites](./docs/deployment/02-prerequisites.md)  
-> 🔑 [YubiKey Enrollment](./docs/deployment/03-yubikey-enrollment.md)  
-> 📱 [Passkey Deployment Guide](./docs/platform-passkeys/01-full-deployment-guide.md)
-
----
-
-A deployment and operations playbook for implementing **phishing-resistant authentication** in Microsoft Entra ID using:
-
-- YubiKeys (hardware FIDO2)
-- Platform passkeys (Microsoft Authenticator & Windows Hello)
-- Conditional Access
-- Break-glass protections
-- Lab-to-production rollout strategy
-
----
-
-This project is focused on making that practical—not just configured, but validated and operational.
 
 ## 👥 Who This Is For
 
-This project is designed for:
-
-- security engineers implementing Conditional Access
-- identity architects deploying phishing-resistant MFA
-- SOC teams validating authentication posture
-- organizations moving toward Zero Trust
-
-It is especially useful for environments that:
-- already use Microsoft Entra ID
-- want to eliminate phishing-based compromise paths
-- need a structured approach to FIDO2 rollout
-
-## 🧠 Design Decisions
-
-### Why YubiKey for Privileged Users
-- Hardware-backed authentication
-- Highest assurance level
-- Resistant to device compromise
-
-### Why Passkeys for Standard Users
-- Better user experience
-- No hardware distribution required
-- Scalable deployment
-
-### Why Separate Policies
-- Prevents policy conflicts
-- Enables targeted enforcement
-- Reduces lockout risk
+* Security engineers
+* Identity architects
+* Microsoft 365 administrators
+* Organizations implementing Zero Trust
 
 ---
 
-## 🖼️ Architecture Overview
+## 📚 Table of Contents
 
-This solution focuses on enforcing phishing-resistant MFA using FIDO2 security keys, Conditional Access, and controlled fallback mechanisms.
-
-## 🚀 Deployment Walkthrough (Recommended Order)
-
-This section outlines a safe, phased approach to deploying phishing-resistant MFA.
-
-### Phase 1 — Preparation
-
-- identify pilot users (admins first)
-- confirm break-glass accounts exist and are excluded
-- enable FIDO2 authentication method
-- configure Temporary Access Pass (TAP)
-
-### Phase 2 — Pilot Deployment
-
-- issue FIDO2 keys to pilot group
-- require phishing-resistant MFA for pilot users (report-only first)
-- validate sign-in logs and behavior
-
-### Phase 3 — Controlled Enforcement
-
-- switch Conditional Access policy from report-only → on
-- expand to high-risk users (admins, finance, execs)
-- monitor for failures or lockouts
-
-### Phase 4 — Broader Rollout
-
-- expand to additional user groups in phases
-- reduce reliance on legacy MFA methods
-- enforce device compliance where applicable
-
-### Phase 5 — Validation & Monitoring
-
-- review sign-in logs for authentication method usage
-- confirm phishing-resistant MFA adoption
-- identify gaps or fallback usage
-
-## ⚠️ Common Pitfalls
-
-- enforcing phishing-resistant MFA before users register FIDO2 keys
-- not excluding break-glass accounts
-- enabling policies without report-only validation
-- not validating fallback authentication paths
-
-> Misconfiguration can result in tenant lockout. Always validate in a pilot group first.
-
-> ⚠️ Always test with a small group before full enforcement to avoid tenant lockout.
-
-### 🔐 Authentication Flow
-
-![Authentication Flow](./diagrams/authentication-flow.png)
-
-### 🛡️ Conditional Access Design
-
-![Conditional Access](./diagrams/conditional-access.png)
+* [Why This Matters](#-why-this-matters)
+* [The Problem](#-the-problem)
+* [The Solution](#-the-solution)
+* [Deployment Guide](#-deployment-guide-step-by-step)
+* [Validation](#-validation--testing-summary)
+* [Common Mistakes](#-common-mistakes)
+* [Real-World Use Cases](#-real-world-use-cases)
+* [Rollout Strategy](#-recommended-rollout-strategy)
+* [Next Steps](#-next-steps)
 
 ---
 
-## 📚 Quick Navigation
+## ⚠️ Why This Matters
 
-| Section | Link |
-|---|---|
-| 🚀 Deployment Guide | [Full Deployment Guide](./docs/deployment/01-full-deployment-guide.md) |
-| 📋 Prerequisites | [Prerequisites](./docs/deployment/02-prerequisites.md) |
-| 🔑 Enrollment | [YubiKey Enrollment](./docs/deployment/03-yubikey-enrollment.md) |
-| 📱 Passkey Deployment | [Passkeys](./docs/platform-passkeys/01-full-deployment-guide.md) |
-| 🛡️ Policies | [Policies](./docs/policies/) |
-| 🧰 Operations | [Operations](./docs/operations/) |
-| ✅ Validation | [Validation](./docs/validation/) |
-| ⚙️ Scripts | [Scripts](./scripts/) |
+Traditional MFA methods (SMS, push notifications, OTP) are vulnerable to:
+
+* Adversary-in-the-Middle (AiTM) phishing attacks
+* MFA fatigue / push bombing
+* Token theft and replay
+
+Phishing-resistant MFA (FIDO2, Windows Hello for Business, certificate-based authentication) eliminates these risks by binding authentication to the device and origin.
 
 ---
 
-## 🎯 Purpose
+## 🚨 The Problem
 
-This repository provides a complete deployment, validation, and operational playbook for implementing **phishing-resistant authentication** in Microsoft Entra ID.
+Many organizations believe MFA is sufficient—but:
 
-It includes:
+* Attackers can intercept MFA tokens
+* Push fatigue attacks trick users into approving access
+* Session hijacking bypasses MFA entirely
 
-- Hardware-backed MFA (YubiKey)
-- Platform passkeys (Microsoft Authenticator & Windows Hello)
-- Conditional Access enforcement
-- Recovery and operational lifecycle
-
----
-
-## 🔐 Authentication Tracks
-
-This repository includes two complementary authentication approaches.
+This leaves privileged accounts exposed even with MFA enabled.
 
 ---
 
-### 🔑 Hardware-Backed (Privileged Accounts)
+## 🛡️ The Solution
 
-- YubiKey (FIDO2 security keys)
-- Highest assurance authentication
-- Recommended for:
-  - Global Administrators
-  - Privileged roles
+Microsoft Entra provides **authentication strengths** that enforce phishing-resistant methods:
 
-👉 Primary deployment path  
+* FIDO2 (YubiKey / passkeys)
+* Windows Hello for Business
+* Certificate-based authentication
 
-[Full Deployment Guide](./docs/deployment/01-full-deployment-guide.md)
+Combined with Conditional Access, these ensure:
 
----
-
-### 📱 Platform Passkeys (Passwordless)
-
-- Microsoft Authenticator passkeys
-- Windows Hello for Business
-- Device-bound authentication
-
-👉 Recommended for:
-- Standard users
-- Scalable deployments
-
-👉 Deployment guide  
-[Passkey Deployment Guide](./docs/platform-passkeys/01-full-deployment-guide.md)
+* Only strong authentication methods are allowed
+* Weak MFA methods are blocked
 
 ---
 
-## 🧠 Important Distinction
+## ⚙️ Deployment Guide (Step-by-Step)
 
-Passkeys are:
-
-- Phishing-resistant  
-- Passwordless  
-- Device-bound  
-
-They satisfy strong authentication requirements without traditional MFA prompts.
+> [!TIP]
+> Follow this guide step-by-step.
+> Do not skip validation steps before enabling policies.
 
 ---
 
-## 🏗️ Recommended Architecture
+## 🔄 Policy Interaction Diagram
 
-```plaintext
-Privileged Users:
-  → YubiKey (hardware, highest assurance)
+```mermaid
+flowchart TD
+    A[User attempts sign-in] --> B{Break-glass account?}
+    B -->|Yes| C[Excluded from all Conditional Access]
+    B -->|No| D[Evaluate Conditional Access assignments]
 
-Standard Users:
-  → Authenticator passkeys
-  → Windows Hello for Business
+    D --> E{Admin / privileged role?}
+    E -->|No| F[Evaluate standard user policies]
+    E -->|Yes| G[Evaluate privileged access policies]
 
-Fallback:
-  → Temporary Access Pass (TAP)
+    G --> H{Lab policy enabled?}
+    H -->|Yes| I[Require MFA]
+    H -->|No| J[Skip to production policy]
+
+    I --> K{Authentication method used}
+    K -->|YubiKey| L[Allowed]
+    K -->|Authenticator| L
+    K -->|Windows Hello| L
+
+    J --> M{Production policy enabled?}
+    M -->|Yes| N[Require phishing-resistant MFA]
+    M -->|No| O[No production enforcement]
+
+    N --> P{Authentication method used}
+    P -->|YubiKey| Q[Allowed]
+    P -->|Windows Hello| Q
+    P -->|Authenticator| R[Blocked]
+
+    Q --> S{Defender for Cloud Apps session control applied?}
+    L --> S
+
+    S -->|No| T[Access granted]
+    S -->|Yes| U{Admin portal or privileged app?}
+    U -->|Yes| V[Not recommended - may disrupt FIDO2]
+    U -->|No| W[Apply session monitoring / app control]
+
+    V --> X[Potential login loop or failed prompt]
+    W --> T
+    O --> T
+    F --> T
 ```
 
 ---
 
-## 🎯 Purpose
+## 🧭 Authentication Flow Overview
 
-This repository provides a complete deployment, validation, and operational playbook for implementing phishing-resistant MFA using YubiKeys (FIDO2/passkeys) in Microsoft Entra ID.
+```mermaid
+flowchart TD
+    A[User Sign-In] --> B{Break-glass account?}
+    B -->|Yes| C[Bypass Conditional Access]
+    B -->|No| D[Evaluate Conditional Access Policies]
 
----
+    D --> E{Policy Type}
+    E -->|Lab Policy| F[Require MFA]
+    E -->|Production Policy| G[Require Phishing-Resistant MFA]
 
-## 🧩 Architecture
+    F --> H{Allowed Methods}
+    H -->|YubiKey| I[Access Granted]
+    H -->|Authenticator| I
+    H -->|Windows Hello| I
 
-- Identity Platform: Microsoft Entra ID
-- Authentication Methods:
-  - FIDO2 (YubiKey)
-  - Windows Hello for Business
-  - Microsoft Authenticator (lab fallback only)
-- Conditional Access: Policy-based enforcement
-- Recovery:
-  - Break-glass account
-  - Temporary Access Pass (TAP)
+    G --> J{Allowed Methods}
+    J -->|YubiKey| K[Access Granted]
+    J -->|Windows Hello| K
+    J -->|Authenticator| L[Blocked]
 
----
-
-## 🚀 Deployment Phases
-
-| Phase | Description |
-|------|------------|
-| Phase 1 | Lab deployment (MFA + fallback) |
-| Phase 2 | Stabilization & testing |
-| Phase 3 | Phishing-resistant enforcement |
-| Phase 4 | Operational lifecycle |
+    C --> M[Emergency Access]
+```
 
 ---
 
-## 📚 Documentation
+## ⚠️ Before You Start
 
-<details>
-<summary><strong>🔧 Deployment</strong></summary>
+This guide assumes:
 
-- [Prerequisites](docs/deployment/prerequisites.md)
-- [YubiKey Enrollment](docs/deployment/yubikey-enrollment.md)
-- [Conditional Access](docs/deployment/conditional-access.md)
-
-</details>
-
-<details>
-<summary><strong>🔐 Policies</strong></summary>
-
-- [Privileged (Lab Mode)](docs/policies/ca-privileged-lab.md)
-- [Privileged (Phishing-Resistant)](docs/policies/ca-privileged-phishing-resistant.md)
-
-</details>
-
-<details>
-<summary><strong>🛠 Operations</strong></summary>
-
-- [YubiKey Reset](docs/operations/yubikey-reset.md)
-- [Break-Glass Account](docs/operations/break-glass.md)
-- [Recovery (TAP)](docs/operations/recovery.md)
-- [Lifecycle Management](docs/operations/lifecycle.md)
-
-</details>
-
-<details>
-<summary><strong>✅ Validation</strong></summary>
-
-- [Testing Plan](docs/validation/testing.md)
-- [Sign-in Logs](docs/validation/sign-in-logs.md)
-
-</details>
+* You have Global Administrator access
+* A break-glass account is created and excluded from Conditional Access
+* You are testing in a controlled or lab environment
+* Misconfiguration may result in administrative lockout
 
 ---
 
-## ⚠️ Security Notes
+## ☁️ Defender for Cloud Apps Considerations
 
-- Never enforce phishing-resistant MFA without:
-  - Backup YubiKey
-  - Break-glass account
-- Always test policies in report-only mode first
-- Avoid session control on admin portals
+> [!IMPORTANT]
+> Defender for Cloud Apps session controls can interfere with phishing-resistant authentication if not configured carefully.
 
----
+### 🧠 Key Concept
 
-## 🧠 Design Philosophy
+Microsoft Defender for Cloud Apps acts as a proxy when session controls are applied.
 
-<details>
-<summary><strong>Lab Phase</strong></summary>
+This means:
 
-- Flexibility
-- Authenticator allowed as fallback
-- Safer for initial rollout and hardware testing
-
-</details>
-
-<details>
-<summary><strong>Production Phase</strong></summary>
-
-- Enforce phishing-resistant MFA
-- Allow YubiKey or Windows Hello only
-- Remove dependency on weaker fallback methods
-
-</details>
+* Authentication traffic may be intercepted
+* FIDO2 (YubiKey) flows can be impacted
 
 ---
 
-## 📌 Status
+## ⚠️ Known Risks
 
-- ✔ Lab-ready  
-- ✔ Enterprise-ready  
-- ✔ Zero Trust aligned
+If you enable Conditional Access App Control (session control), you may experience:
 
----
+* YubiKey prompts failing
+* Authentication loops
+* Unexpected sign-in behavior
+* Inconsistent MFA prompts
 
-## 🚀 Start Here
+### 🚫 Do NOT apply session controls to:
 
-1. [Full Deployment Guide](docs/deployment/01-full-deployment-guide.md)
-2. [Prerequisites](docs/deployment/02-prerequisites.md)
-3. [YubiKey Enrollment](docs/deployment/03-yubikey-enrollment.md)
+* Microsoft Entra admin center
+* Azure portal
+* Microsoft 365 admin center
 
----
-
-## 📚 Documentation
-
-### 🔧 Deployment
-- [Full Deployment Guide](docs/deployment/01-full-deployment-guide.md)
-- [Prerequisites](docs/deployment/02-prerequisites.md)
-- [YubiKey Enrollment](docs/deployment/03-yubikey-enrollment.md)
-- [Conditional Access](docs/deployment/conditional-access.md)
+👉 These are critical admin surfaces and must remain stable
 
 ---
 
-## ⚠️ Disclaimer
-This tool is provided for educational, testing, and security validation purposes only.
+### ✅ Recommended Approach
 
-Use of this tool should be limited to:
+1. **Exclude Admin Roles from Session Control**
 
-Authorized environments
-- Lab or approved enterprise systems
+   * Global Administrator
+   * Privileged roles
 
-The author assumes no liability or responsibility for:
-- Misuse of this tool
-- Damage to systems
-- Unauthorized or improper use
+2. **Use App Control Selectively**
 
-By using this tool, you agree to use it in a lawful and responsible manner.
+   * High-risk SaaS apps
+   * Non-admin scenarios
 
-This project is not affiliated with or endorsed by Microsoft.
+3. **Test Before Enforcing**
 
-## ⚖️ Professional Disclaimer
+   * Validate YubiKey sign-in
+   * Test browser + device login
 
-This project is an independent work developed in a personal capacity.
+4. **Monitor Sign-in Behavior**
 
-The views, opinions, code, and content expressed in this repository are solely my own and do not reflect the views, policies, or positions of any current or future employer, client, or affiliated organization.
-
-No employer, past, present, or future, has reviewed, approved, endorsed, or is in any way associated with these works.
-
-This project was developed outside the scope of any employment and without the use of proprietary, confidential, or restricted resources.
-
-All code/language in this repository is provided under the terms of the included MIT License.
+   * Entra sign-in logs
+   * Defender for Cloud Apps logs
 
 ---
+
+## 🔍 Troubleshooting Indicators
+
+| Symptom                        | Possible Cause               |
+| ------------------------------ | ---------------------------- |
+| YubiKey prompt does not appear | Session proxy interfering    |
+| Infinite login loop            | App control misconfiguration |
+| MFA prompts inconsistent       | Policy conflict              |
+
+---
+
+## ⚡ Design Principle
+
+Authentication should be strong and direct.
+Session control should be selective and post-authentication.
+
+---
+
+## 📚 Supporting Documents
+
+* Prerequisites
+* YubiKey Enrollment
+
+---
+
+## 🧰 Step 1 — Environment Setup
+
+```powershell
+$PSVersionTable.PSVersion
+```
+
+```powershell
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+Install-Module Microsoft.Graph.Authentication -Scope CurrentUser
+Install-Module Microsoft.Graph.Identity.SignIns -Scope CurrentUser
+
+Connect-MgGraph -Scopes `
+  "Policy.Read.All", `
+  "Policy.ReadWrite.ConditionalAccess", `
+  "Application.Read.All", `
+  "Policy.ReadWrite.AuthenticationMethod"
+```
+
+```powershell
+Get-MgContext
+```
+
+---
+
+## 🚀 Step 2 — Execute Deployment Scripts
+
+```powershell
+.\scripts\00-install-modules.ps1
+.\scripts\01-connect-graph.ps1
+```
+
+---
+
+## ✅ What Success Looks Like
+
+* Lab policy allows fallback (Authenticator)
+* Production policy blocks weak MFA
+* YubiKey authentication succeeds
+* Break-glass account bypasses policies
+
+---
+
+## ⚠️ Critical Safety Checks
+
+* YubiKey is registered
+* Backup key available
+* Break-glass account verified
+* Logs reviewed
+
+---
+
+## 🛠️ Troubleshooting
+
+* Ensure Graph scopes are granted
+* Verify admin role permissions
+* Use supported browser (Edge/Chrome)
+* Use break-glass account if locked out
+
+---
+
+## 🧠 Key Concepts
+
+| Phase      | Behavior                        |
+| ---------- | ------------------------------- |
+| Lab        | MFA allows fallback             |
+| Production | Only phishing-resistant allowed |
+
+---
+
+## ⚡ Best Practices
+
+* Start in report-only mode
+* Never remove fallback too early
+* Always test before enforcement
+* Maintain recovery path
+* Issue multiple YubiKeys
+
+---
+
+## 🧪 Validation & Testing (Summary)
+
+* Confirm phishing-resistant MFA is enforced
+* Validate fallback is blocked
+* Review sign-in logs
+
+---
+
+## ⚠️ Common Mistakes
+
+* Not excluding break-glass accounts
+* Enabling production too early
+* Misconfiguring authentication strengths
+* Applying session controls to admin portals
+
+---
+
+## 🧠 Real-World Use Cases
+
+* Securing privileged accounts
+* Enforcing Zero Trust
+* Protecting remote workforce
+
+---
+
+## 🚦 Recommended Rollout Strategy
+
+1. Start with report-only mode
+2. Deploy to a pilot group
+3. Validate authentication behavior
+4. Expand to privileged users
+5. Enforce production policy
+
+Never enforce globally without validation.
+
+---
+
+## 🚀 Next Steps
+
+* Integrate Identity Protection
+* Expand Zero Trust architecture
+* Monitor with KQL and sign-in logs
