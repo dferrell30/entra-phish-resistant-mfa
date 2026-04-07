@@ -91,6 +91,23 @@ It is especially useful for environments that:
 - want to eliminate phishing-based compromise paths
 - need a structured approach to FIDO2 rollout
 
+## 🧠 Design Decisions
+
+### Why YubiKey for Privileged Users
+- Hardware-backed authentication
+- Highest assurance level
+- Resistant to device compromise
+
+### Why Passkeys for Standard Users
+- Better user experience
+- No hardware distribution required
+- Scalable deployment
+
+### Why Separate Policies
+- Prevents policy conflicts
+- Enables targeted enforcement
+- Reduces lockout risk
+
 ---
 
 ## 🖼️ Architecture Overview
