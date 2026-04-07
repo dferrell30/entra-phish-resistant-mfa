@@ -6,6 +6,70 @@
 
 A complete, end-to-end process for deploying phishing-resistant MFA using YubiKeys (FIDO2/passkeys) in Microsoft Entra ID.
 
+# 🔐 Entra Phishing-Resistant MFA Implementation Guide
+
+A practical, production-ready guide to implementing phishing-resistant MFA in Microsoft Entra using Conditional Access, authentication strengths, and FIDO2 (YubiKey/passkeys).
+
+---
+
+## 📚 Table of Contents
+- [Why This Matters](#-why-this-matters)
+- [The Problem](#-the-problem)
+- [The Solution](#-the-solution)
+- [Deployment Guide](#️-deployment-guide-step-by-step)
+- [Validation](#-validation--testing-summary)
+- [Common Mistakes](#-common-mistakes)
+- [Real-World Use Cases](#-real-world-use-cases)
+- [Next Steps](#-next-steps)
+
+---
+
+## ⚠️ Why This Matters
+
+Traditional MFA methods (SMS, push notifications, OTP) are vulnerable to:
+
+- Adversary-in-the-Middle (AiTM) phishing attacks  
+- MFA fatigue / push bombing  
+- Token theft and replay  
+
+Phishing-resistant MFA (FIDO2, Windows Hello for Business, certificate-based authentication) eliminates these risks by binding authentication to the device and origin.
+
+---
+
+## 🚨 The Problem
+
+Many organizations believe MFA is sufficient—but:
+
+- Attackers can intercept MFA tokens  
+- Push fatigue attacks trick users into approving access  
+- Session hijacking bypasses MFA entirely  
+
+This leaves privileged accounts exposed even with MFA enabled.
+
+---
+
+## 🛡️ The Solution
+
+Microsoft Entra provides **authentication strengths** that enforce phishing-resistant methods:
+
+- FIDO2 (YubiKey / passkeys)  
+- Windows Hello for Business  
+- Certificate-based authentication  
+
+Combined with Conditional Access, these ensure:
+
+- Only strong authentication methods are allowed  
+- Weak MFA methods are blocked  
+
+---
+
+## ⚙️ Deployment Guide (Step-by-Step)
+
+> [!TIP]
+> Follow this guide step-by-step.  
+> Do not skip validation steps before enabling policies.
+
+
 ## 🔄 Policy Interaction Diagram
 
 ```mermaid
