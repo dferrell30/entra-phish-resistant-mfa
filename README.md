@@ -1,5 +1,17 @@
 # 🔐 Entra Phishing-Resistant MFA Playbook (YubiKey & Microsoft Authenticator Passkey)
 
+<div align="left">
+
+[![Microsoft Entra](https://img.shields.io/badge/Microsoft-Entra-blue)](./docs/deployment/01-full-deployment-guide.md)
+[![Auth](https://img.shields.io/badge/Auth-FIDO2%20%7C%20YubiKey-green)](./docs/deployment/01-full-deployment-guide.md)
+[![Passwordless](https://img.shields.io/badge/Auth-Passkeys%20%7C%20Passwordless-blueviolet)](./docs/platform-passkeys/01-full-deployment-guide.md)
+[![Security](https://img.shields.io/badge/Security-Phishing--Resistant-purple)](./docs/policies/ca-privileged-phish-resistant.md)
+[![Status](https://img.shields.io/badge/Status-Lab%20to%20Production-orange)](./docs/deployment/01-full-deployment-guide.md)
+
+</div>
+
+---
+
 ## 🧠 Overview
 
 This repository provides a production-ready design and deployment playbook for phishing-resistant authentication in Microsoft Entra ID.
@@ -37,16 +49,6 @@ This design:
 > 📋 [Prerequisites](./docs/deployment/02-prerequisites.md)  
 > 🔑 [YubiKey Enrollment](./docs/deployment/03-yubikey-enrollment.md)  
 > 📱 [Passkey Deployment Guide](./docs/platform-passkeys/01-full-deployment-guide.md)
-
-<div align="left">
-
-[![Microsoft Entra](https://img.shields.io/badge/Microsoft-Entra-blue)](./docs/deployment/01-full-deployment-guide.md)
-[![Auth](https://img.shields.io/badge/Auth-FIDO2%20%7C%20YubiKey-green)](./docs/deployment/01-full-deployment-guide.md)
-[![Passwordless](https://img.shields.io/badge/Auth-Passkeys%20%7C%20Passwordless-blueviolet)](./docs/platform-passkeys/01-full-deployment-guide.md)
-[![Security](https://img.shields.io/badge/Security-Phishing--Resistant-purple)](./docs/policies/ca-privileged-phish-resistant.md)
-[![Status](https://img.shields.io/badge/Status-Lab%20to%20Production-orange)](./docs/deployment/01-full-deployment-guide.md)
-
-</div>
 
 ---
 
