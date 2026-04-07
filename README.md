@@ -1,5 +1,28 @@
 # 🔐 Entra Phishing-Resistant MFA Playbook (YubiKey & Microsoft Authenticator Passkey)
 
+## 📚 Table of Contents
+- [Why This Matters](#-why-this-matters)
+- [The Problem](#-the-problem)
+- [The Solution](#-the-solution)
+- [Implementation](#️-implementation)
+- [Validation](#-validation--testing)
+- [Common Mistakes](#-common-mistakes)
+- [Use Cases](#-real-world-use-cases)
+- [Architecture](#-authentication-flow)
+- [Next Steps](#-next-steps)
+
+## ⚠️ Why Phishing-Resistant MFA Matters
+
+Traditional MFA methods (SMS, push notifications, OTP) are vulnerable to:
+
+- Adversary-in-the-Middle (AiTM) phishing attacks  
+- MFA fatigue / push bombing  
+- Token theft and replay  
+
+Phishing-resistant MFA (FIDO2, Windows Hello for Business, Certificate-based auth) eliminates these attack paths by binding authentication to the device and origin.
+
+This guide shows how to enforce phishing-resistant MFA in Microsoft Entra using Conditional Access.
+
 <div align="left">
 
 [![Microsoft Entra](https://img.shields.io/badge/Microsoft-Entra-blue)](./docs/deployment/01-full-deployment-guide.md)
@@ -71,19 +94,6 @@ A deployment and operations playbook for implementing **phishing-resistant authe
 - Lab-to-production rollout strategy
 
 ---
-
-## 🧠 Why This Matters
-
-In many environments, MFA is enabled—but still vulnerable to phishing, token theft, and session replay.
-
-I’ve seen cases where:
-- MFA was technically enforced but still bypassed
-- users approved malicious prompts
-- legacy authentication created unexpected gaps
-
-Phishing-resistant MFA changes that.
-
-By enforcing strong authentication methods like FIDO2 security keys and tightly controlling fallback mechanisms, you significantly reduce the risk of credential-based attacks.
 
 This project is focused on making that practical—not just configured, but validated and operational.
 
