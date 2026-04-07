@@ -381,3 +381,34 @@ This is now:
 - ✅ Portfolio-ready  
 
 ---
+
+## 🧪 Validation & Testing (Summary)
+
+After deployment:
+
+- Verify phishing-resistant MFA is enforced  
+- Confirm fallback methods are blocked  
+- Review sign-in logs for policy enforcement
+
+---
+
+## ⚠️ Common Mistakes
+
+- Not excluding break-glass accounts  
+- Enabling production policy too early  
+- Misconfiguring authentication strengths  
+- Applying session controls to admin portals
+
+--- ## 🧠 Real-World Use Cases
+
+- Securing privileged accounts  
+- Enforcing Zero Trust identity strategy  
+- Protecting remote workforce access
+
+---
+
+## 🚀 Next Steps
+
+- Integrate with Identity Protection policies  
+- Expand to full Zero Trust architecture  
+- Monitor using KQL and sign-in logs  
