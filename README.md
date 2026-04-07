@@ -15,14 +15,15 @@ This approach aligns with Zero Trust principles and eliminates password-based au
 
 ## 🎯 What This Solves
 
-Traditional MFA is vulnerable to phishing attacks.
+Traditional MFA methods (push, SMS, OTP) are vulnerable to phishing.
 
-This design eliminates those risks by:
+This design:
 
-- Removing password reliance
-- Enforcing phishing-resistant authentication methods
-- Separating controls based on user risk level
-
+- Eliminates password reliance
+- Prevents credential replay attacks
+- Enforces phishing-resistant authentication methods
+- Separates controls based on user risk level
+  
 > I built this to better understand how phishing-resistant MFA is actually deployed in real environments—not just how it’s documented.
 
 <div align="left">
