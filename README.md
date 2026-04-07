@@ -13,6 +13,16 @@ It demonstrates how to:
 
 This project shows how to deploy phishing-resistant MFA using FIDO2, Conditional Access, and Temporary Access Pass (TAP).
 
+## 🎯 What This Solves
+
+Traditional MFA is vulnerable to phishing attacks.
+
+This design eliminates those risks by:
+
+- Removing password reliance
+- Enforcing phishing-resistant authentication methods
+- Separating controls based on user risk level
+
 > I built this to better understand how phishing-resistant MFA is actually deployed in real environments—not just how it’s documented.
 
 <div align="left">
