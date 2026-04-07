@@ -12,9 +12,13 @@
 
 # 🔐 Entra Phishing-Resistant MFA Implementation Guide
 
-![PowerShell](https://img.shields.io/badge/PowerShell-Ready-blue)
-![Microsoft Entra](https://img.shields.io/badge/Microsoft-Entra-purple)
-![Security](https://img.shields.io/badge/Security-Zero%20Trust-green)
+<div align="left">
+  
+[![PowerShell](https://img.shields.io/badge/PowerShell-Ready-blue)
+[![Microsoft Entra](https://img.shields.io/badge/Microsoft-Entra-purple)
+[![Security](https://img.shields.io/badge/Security-Zero%20Trust-green)
+
+</div>
 
 ---
 
