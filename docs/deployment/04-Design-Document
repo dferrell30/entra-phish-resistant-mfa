@@ -1,1 +1,205 @@
+# 🧠 Entra Phishing-Resistant Authentication Design
 
+This document defines the architecture, controls, and configuration for implementing phishing-resistant authentication in Microsoft Entra ID.
+
+---
+
+# 🎯 Objectives
+
+- Eliminate password-based authentication where possible  
+- Enforce phishing-resistant authentication  
+- Protect privileged accounts with highest assurance  
+- Provide scalable authentication for standard users  
+- Maintain secure recovery paths  
+
+---
+
+# 🏗️ High-Level Architecture
+
+```mermaid
+flowchart TD
+    A[User Sign-In] --> B{User Type}
+
+    B -->|Privileged| C[YubiKey Required]
+    B -->|Standard| D[Passkey Required]
+
+    C --> E[Phishing-Resistant Authentication]
+    D --> F[Authenticator / Windows Hello]
+
+    E --> G[Conditional Access Evaluation]
+    F --> G
+
+    G --> H{Policy Decision}
+
+    H -->|Compliant| I[Access Granted]
+    H -->|Non-Compliant| J[Blocked]
+
+    I --> K[Application Access]
+
+    J --> L[Remediation / TAP]
+
+    M[Break-Glass Account] --> I
+
+🔐 Authentication Model
+- Privileged Users
+- YubiKey (FIDO2 security key)
+- Hardware-backed authentication
+- No fallback to weaker methods
+- Standard Users
+- Microsoft Authenticator passkeys (required)
+- Windows Hello for Business (optional)
+- Passwordless authentication
+- Recovery Methods
+- Temporary Access Pass (TAP)
+- Break-glass account (excluded from policies)
+
+🛡️ Conditional Access Design
+- Policy Segmentation
+- Policy	Target	Enforcement
+- Privileged Policy	Admin roles	Phishing-resistant MFA (YubiKey)
+- Passkey Policy	Standard users	Phishing-resistant MFA
+- Lab Policy	Pilot users	MFA (report-only)
+- Core Controls
+- Assignments
+
+Users:
+- Include: Target group
+- Exclude: Break-glass account
+
+Applications:
+- All cloud apps
+
+Client apps:
+- Browser
+- Mobile and desktop clients
+- Grant Controls
+- Lab Policy
+- Require MFA
+
+Production Policy
+- Require authentication strength:
+- Phishing-resistant MFA
+- Session Controls
+- Not configured for privileged accounts
+- Optional for standard users
+
+⚠️ Policy Interaction Considerations
+
+Ensure policies do not conflict:
+
+- Privileged (YubiKey) policy
+- Passkey policy
+- Legacy MFA policies
+
+Conflicts may cause:
+
+- Authentication loops
+- Incorrect MFA prompts
+- Access failures
+
+🛡️ Defender for Cloud Apps Integration
+- Recommended Use
+- Standard users only
+- Data protection scenarios
+- Avoid For
+- Privileged accounts
+- Admin portals
+- Risks
+- Session disruption
+- Authentication flow issues
+
+🧾 Licensing Requirements
+Capability	Requirement
+Conditional Access	Entra ID P1
+Authentication Strengths	Entra ID P1
+Risk-based policies	Entra ID P2 (optional)
+
+🧪 Validation Strategy
+- Lab Phase
+- Report-only policies
+- Pilot group testing
+- Authentication verification
+
+Production Phase
+- Enforce authentication strength
+- Block password-based sign-in
+- Monitor sign-in logs
+
+Success Criteria
+- Passkey authentication works consistently
+- Password sign-in blocked
+- No unexpected MFA prompts
+- Break-glass access verified
+
+🛠️ Operational Model
+- User Lifecycle
+- Event	Action
+- New user	Register passkey
+- Lost device	Issue TAP
+- Device replacement	Re-register passkey
+- Monitoring
+- Sign-in logs
+- Conditional Access insights
+- Authentication method usage
+
+🔐 Security Controls Summary
+- Control	Purpose
+- FIDO2 / Passkeys	Phishing-resistant auth
+- Conditional Access	Enforcement
+- Authentication Strengths	Method restriction
+- TAP	Recovery
+- Break-glass	Emergency access
+
+🧠 Design Principles
+- Zero Trust architecture
+- Least privilege access
+- Phishing-resistant enforcement
+- Separation of user risk levels
+- Recovery-first design
+
+📌 Final Architecture Summary
+Privileged Users:
+  → YubiKey (required)
+
+Standard Users:
+  → Authenticator passkeys (required)
+  → Windows Hello (optional)
+
+Fallback:
+  → Temporary Access Pass (TAP)
+  → Break-glass account
+
+This design delivers strong, scalable, and secure authentication aligned with modern Zero Trust principles.
+
+---
+
+# 🖼️ TOP-LEVEL DIAGRAM (FOR README)
+
+👉 Add this near the top of your README:
+
+```md
+## 🏗️ Authentication Architecture
+
+```mermaid
+flowchart LR
+    A[User] --> B{User Type}
+
+    B -->|Admin| C[YubiKey]
+    B -->|Standard| D[Passkey]
+
+    D --> E[Authenticator]
+    D --> F[Windows Hello]
+
+    C --> G[Phishing-Resistant Auth]
+    E --> G
+    F --> G
+
+    G --> H[Conditional Access]
+
+    H --> I{Compliant?}
+
+    I -->|Yes| J[Access Granted]
+    I -->|No| K[Blocked]
+
+    L[Break-Glass] --> J
+    M[TAP] --> J
