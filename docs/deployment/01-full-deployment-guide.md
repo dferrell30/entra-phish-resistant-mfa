@@ -1,11 +1,3 @@
-# 🔐 Entra Phishing-Resistant MFA Deployment Guide
-
-> [!TIP]
-> Follow this guide step-by-step.  
-> Do not skip validation steps before enabling policies.
-
-A complete, end-to-end process for deploying phishing-resistant MFA using YubiKeys (FIDO2/passkeys) in Microsoft Entra ID.
-
 # 🔐 Entra Phishing-Resistant MFA Implementation Guide
 
 A practical, production-ready guide to implementing phishing-resistant MFA in Microsoft Entra using Conditional Access, authentication strengths, and FIDO2 (YubiKey/passkeys).
