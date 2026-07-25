@@ -1,401 +1,207 @@
-# 🔐 Entra Phishing-Resistant MFA Implementation Guide
+# Shadow Suite Operational Blueprint #001
 
-A practical, production-ready guide to implementing phishing-resistant MFA in Microsoft Entra using Conditional Access, authentication strengths, and FIDO2 (YubiKey/passkeys).
+# Deploying Microsoft Authenticator Passkeys in Microsoft Entra ID
 
----
-
-## 👥 Who This Is For
-
-* Security engineers
-* Identity architects
-* Microsoft 365 administrators
-* Organizations implementing Zero Trust
+> **Building a Production-Ready Rollout for Phishing-Resistant Authentication**
 
 ---
 
-## 📚 Table of Contents
+## What is an Operational Blueprint?
 
-* [Why This Matters](#-why-this-matters)
-* [The Problem](#-the-problem)
-* [The Solution](#-the-solution)
-* [Deployment Guide](#-deployment-guide-step-by-step)
-* [Validation](#-validation--testing-summary)
-* [Common Mistakes](#-common-mistakes)
-* [Real-World Use Cases](#-real-world-use-cases)
-* [Rollout Strategy](#-recommended-rollout-strategy)
-* [Next Steps](#-next-steps)
+Shadow Suite Operational Blueprints are practitioner-focused implementation guides designed to help Microsoft security administrators move beyond simply configuring technology toward successfully deploying, validating, and operating it in production.
 
----
+Unlike traditional deployment guides, Operational Blueprints answer four fundamental questions:
 
-## ⚠️ Why This Matters
+- **What** is the capability?
+- **Why** does it exist?
+- **How** should it be deployed?
+- **How** should it be operated after deployment?
 
-Traditional MFA methods (SMS, push notifications, OTP) are vulnerable to:
-
-* Adversary-in-the-Middle (AiTM) phishing attacks
-* MFA fatigue / push bombing
-* Token theft and replay
-
-Phishing-resistant MFA (FIDO2, Windows Hello for Business, certificate-based authentication) eliminates these risks by binding authentication to the device and origin.
+The objective is to teach operational thinking—not just portal navigation.
 
 ---
 
-## 🚨 The Problem
+# Why This Blueprint Exists
 
-Many organizations believe MFA is sufficient—but:
+Enabling Microsoft Authenticator passkeys is straightforward.
 
-* Attackers can intercept MFA tokens
-* Push fatigue attacks trick users into approving access
-* Session hijacking bypasses MFA entirely
+Deploying them successfully in production is not.
 
-This leaves privileged accounts exposed even with MFA enabled.
+A production rollout requires significantly more than enabling a policy. Administrators must understand planning, pilot deployments, Conditional Access interactions, user enrollment, recovery procedures, operational validation, and long-term support.
 
----
-
-## 🛡️ The Solution
-
-Microsoft Entra provides **authentication strengths** that enforce phishing-resistant methods:
-
-* FIDO2 (YubiKey / passkeys)
-* Windows Hello for Business
-* Certificate-based authentication
-
-Combined with Conditional Access, these ensure:
-
-* Only strong authentication methods are allowed
-* Weak MFA methods are blocked
+This Blueprint captures a practical deployment methodology developed through hands-on implementation and testing. Rather than focusing solely on configuration, it explains the architectural decisions, operational principles, validation techniques, and deployment practices required to introduce Microsoft Authenticator passkeys into a production Microsoft Entra environment.
 
 ---
 
-## ⚙️ Deployment Guide (Step-by-Step)
+# Who Should Read This?
 
-> [!TIP]
-> Follow this guide step-by-step.
-> Do not skip validation steps before enabling policies.
+This Blueprint is intended for:
 
----
-
-## 🔄 Policy Interaction Diagram
-
-```mermaid
-flowchart TD
-    A[User attempts sign-in] --> B{Break-glass account?}
-    B -->|Yes| C[Excluded from all Conditional Access]
-    B -->|No| D[Evaluate Conditional Access assignments]
-
-    D --> E{Admin / privileged role?}
-    E -->|No| F[Evaluate standard user policies]
-    E -->|Yes| G[Evaluate privileged access policies]
-
-    G --> H{Lab policy enabled?}
-    H -->|Yes| I[Require MFA]
-    H -->|No| J[Skip to production policy]
-
-    I --> K{Authentication method used}
-    K -->|YubiKey| L[Allowed]
-    K -->|Authenticator| L
-    K -->|Windows Hello| L
-
-    J --> M{Production policy enabled?}
-    M -->|Yes| N[Require phishing-resistant MFA]
-    M -->|No| O[No production enforcement]
-
-    N --> P{Authentication method used}
-    P -->|YubiKey| Q[Allowed]
-    P -->|Windows Hello| Q
-    P -->|Authenticator| R[Blocked]
-
-    Q --> S{Defender for Cloud Apps session control applied?}
-    L --> S
-
-    S -->|No| T[Access granted]
-    S -->|Yes| U{Admin portal or privileged app?}
-    U -->|Yes| V[Not recommended - may disrupt FIDO2]
-    U -->|No| W[Apply session monitoring / app control]
-
-    V --> X[Potential login loop or failed prompt]
-    W --> T
-    O --> T
-    F --> T
-```
+- Microsoft Entra ID Administrators
+- Identity Administrators
+- Security Engineers
+- Microsoft Security Architects
+- Microsoft Consultants
+- Microsoft Partners
+- IT Professionals implementing phishing-resistant authentication
 
 ---
 
-## 🧭 Authentication Flow Overview
+# Operational Outcomes
 
-```mermaid
-flowchart TD
-    A[User Sign-In] --> B{Break-glass account?}
-    B -->|Yes| C[Bypass Conditional Access]
-    B -->|No| D[Evaluate Conditional Access Policies]
+This Blueprint primarily supports the following operational outcomes:
 
-    D --> E{Policy Type}
-    E -->|Lab Policy| F[Require MFA]
-    E -->|Production Policy| G[Require Phishing-Resistant MFA]
-
-    F --> H{Allowed Methods}
-    H -->|YubiKey| I[Access Granted]
-    H -->|Authenticator| I
-    H -->|Windows Hello| I
-
-    G --> J{Allowed Methods}
-    J -->|YubiKey| K[Access Granted]
-    J -->|Windows Hello| K
-    J -->|Authenticator| L[Blocked]
-
-    C --> M[Emergency Access]
-```
+- **Deploy**
+- **Validate**
+- **Govern**
+- **Improve**
 
 ---
 
-## ⚠️ Before You Start
+# What You'll Learn
 
-This guide assumes:
+By working through this Blueprint you will understand:
 
-* You have Global Administrator access
-* A break-glass account is created and excluded from Conditional Access
-* You are testing in a controlled or lab environment
-* Misconfiguration may result in administrative lockout
+- Why Microsoft Authenticator passkeys exist
+- How passkeys fit within Microsoft Entra ID
+- Authentication Methods architecture
+- Authentication Strength
+- Conditional Access integration
+- User registration planning
+- Operational validation
+- Recovery procedures
+- Deployment sequencing
+- Operational considerations
+- Lessons learned from real-world implementation
 
----
-
-## ☁️ Defender for Cloud Apps Considerations
-
-> [!IMPORTANT]
-> Defender for Cloud Apps session controls can interfere with phishing-resistant authentication if not configured carefully.
-
-### 🧠 Key Concept
-
-Microsoft Defender for Cloud Apps acts as a proxy when session controls are applied.
-
-This means:
-
-* Authentication traffic may be intercepted
-* FIDO2 (YubiKey) flows can be impacted
+The goal is to understand both the technology and the operational methodology required to deploy it successfully.
 
 ---
 
-## ⚠️ Known Risks
+# Repository Structure
 
-If you enable Conditional Access App Control (session control), you may experience:
+This repository is organised into several major areas.
 
-* YubiKey prompts failing
-* Authentication loops
-* Unexpected sign-in behavior
-* Inconsistent MFA prompts
+## Operational Blueprint
 
-### 🚫 Do NOT apply session controls to:
+The `docs` folder contains the complete Operational Blueprint publication.
 
-* Microsoft Entra admin center
-* Azure portal
-* Microsoft 365 admin center
-
-👉 These are critical admin surfaces and must remain stable
+Readers new to passkeys should begin here.
 
 ---
 
-### ✅ Recommended Approach
+## Architecture
 
-1. **Exclude Admin Roles from Session Control**
-
-   * Global Administrator
-   * Privileged roles
-
-2. **Use App Control Selectively**
-
-   * High-risk SaaS apps
-   * Non-admin scenarios
-
-3. **Test Before Enforcing**
-
-   * Validate YubiKey sign-in
-   * Test browser + device login
-
-4. **Monitor Sign-in Behavior**
-
-   * Entra sign-in logs
-   * Defender for Cloud Apps logs
+Architecture documentation explains how Microsoft Entra components interact during a passkey deployment and why each component exists.
 
 ---
 
-## 🔍 Troubleshooting Indicators
+## Deployment
 
-| Symptom                        | Possible Cause               |
-| ------------------------------ | ---------------------------- |
-| YubiKey prompt does not appear | Session proxy interfering    |
-| Infinite login loop            | App control misconfiguration |
-| MFA prompts inconsistent       | Policy conflict              |
+Deployment documentation provides detailed implementation guidance, planning considerations, and deployment workflows.
 
 ---
 
-## ⚡ Design Principle
+## Validation
 
-Authentication should be strong and direct.
-Session control should be selective and post-authentication.
-
----
-
-## 📚 Supporting Documents
-
-* Prerequisites
-* YubiKey Enrollment
+Validation guidance demonstrates how to confirm successful deployment using Microsoft Entra, sign-in logs, authentication methods, and operational evidence.
 
 ---
 
-## 🧰 Step 1 — Environment Setup
+## Operations
 
-```powershell
-$PSVersionTable.PSVersion
-```
-
-```powershell
-Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
-
-Install-Module Microsoft.Graph.Authentication -Scope CurrentUser
-Install-Module Microsoft.Graph.Identity.SignIns -Scope CurrentUser
-
-Connect-MgGraph -Scopes `
-  "Policy.Read.All", `
-  "Policy.ReadWrite.ConditionalAccess", `
-  "Application.Read.All", `
-  "Policy.ReadWrite.AuthenticationMethod"
-```
-
-```powershell
-Get-MgContext
-```
+Operations guidance focuses on maintaining passkeys after deployment, including lifecycle management, recovery procedures, support considerations, and continuous improvement.
 
 ---
 
-## 🚀 Step 2 — Execute Deployment Scripts
+## Scripts
 
-```powershell
-.\scripts\00-install-modules.ps1
-.\scripts\01-connect-graph.ps1
-```
+PowerShell automation scripts support many of the implementation activities discussed throughout this Blueprint.
 
----
-
-## ✅ What Success Looks Like
-
-* Lab policy allows fallback (Authenticator)
-* Production policy blocks weak MFA
-* YubiKey authentication succeeds
-* Break-glass account bypasses policies
+Scripts are intended to accelerate deployment while reinforcing the operational methodology described in the documentation.
 
 ---
 
-## ⚠️ Critical Safety Checks
+# How to Read This Blueprint
 
-* YubiKey is registered
-* Backup key available
-* Break-glass account verified
-* Logs reviewed
+Although each document can be read independently, the recommended reading order is:
 
----
+1. Executive Summary
+2. Operational Problem
+3. Deployment Philosophy
+4. Architecture
+5. Planning
+6. Authentication Methods
+7. Passkey Profiles
+8. User Registration
+9. Authentication Strength
+10. Conditional Access
+11. Operational Validation
+12. Recovery
+13. Lessons From the Field
+14. Operational Checklist
 
-## 🛠️ Troubleshooting
-
-* Ensure Graph scopes are granted
-* Verify admin role permissions
-* Use supported browser (Edge/Chrome)
-* Use break-glass account if locked out
-
----
-
-## 🧠 Key Concepts
-
-| Phase      | Behavior                        |
-| ---------- | ------------------------------- |
-| Lab        | MFA allows fallback             |
-| Production | Only phishing-resistant allowed |
+Following this sequence mirrors the approach used during a production deployment.
 
 ---
 
-## ⚡ Best Practices
+# Deployment Philosophy
 
-* Start in report-only mode
-* Never remove fallback too early
-* Always test before enforcement
-* Maintain recovery path
-* Issue multiple YubiKeys
+Every identity deployment should begin by understanding the operational problem before configuring technology.
 
----
+Throughout this Blueprint the following principles are applied:
 
-## 🧪 Validation & Testing (Summary)
+- Understand the business requirement first.
+- Design the architecture before deployment.
+- Enable capability before enforcement.
+- Pilot before production.
+- Validate using evidence.
+- Prepare recovery before rollout.
+- Continuously monitor and improve.
 
-* Confirm phishing-resistant MFA is enforced
-* Validate fallback is blocked
-* Review sign-in logs
-
----
-
-## ⚠️ Common Mistakes
-
-* Not excluding break-glass accounts
-* Enabling production too early
-* Misconfiguring authentication strengths
-* Applying session controls to admin portals
+These principles apply not only to Microsoft Authenticator passkeys, but to Microsoft security deployments generally.
 
 ---
 
-## 🧠 Real-World Use Cases
+# Repository Goals
 
-* Securing privileged accounts
-* Enforcing Zero Trust
-* Protecting remote workforce
+This repository is intended to become a long-term operational reference for deploying Microsoft Authenticator passkeys.
 
----
+It is designed to provide:
 
-## 🚦 Recommended Rollout Strategy
+- Current Microsoft implementation guidance
+- Enduring deployment methodology
+- Operational best practices
+- Practical validation guidance
+- Repeatable deployment processes
+- Practitioner-focused recommendations
 
-1. Start with report-only mode
-2. Deploy to a pilot group
-3. Validate authentication behavior
-4. Expand to privileged users
-5. Enforce production policy
-
-Never enforce globally without validation.
+The emphasis is on operational excellence rather than simply completing a configuration.
 
 ---
 
-## 🚀 Next Steps
+# Contributing
 
-* Integrate Identity Protection
-* Expand Zero Trust architecture
-* Monitor with KQL and sign-in logs
+Constructive feedback, corrections, and operational observations are always welcome.
+
+Microsoft security capabilities continue to evolve, and this Blueprint will continue evolving alongside them while preserving the underlying operational methodology.
 
 ---
 
-## ⚠️ Disclaimer
+# Related Resources
 
-This information and scripting is provided for **educational, testing, and security validation purposes only**.
+Additional implementation resources, scripts, diagrams, and supporting documentation are included throughout this repository.
 
-Use of this information and scripting should be limited to:
-- Authorized environments  
-- Lab or approved enterprise systems  
+Future Shadow Suite Operational Blueprints will expand this series to cover additional Microsoft Security technologies using the same operational methodology.
 
-The author assumes **no liability or responsibility** for:
-- Misuse of this tool  
-- Damage to systems  
-- Unauthorized or improper use  
-
-By using this tool, you agree to use it in a lawful and responsible manner.
 ---
 
-This project is not affiliated with or endorsed by Microsoft.
+# License
+
+Refer to the repository license for usage terms and conditions.
+
 ---
 
+**Shadow Suite Operational Blueprints**
 
-## ⚖️ Professional Disclaimer
-
-This project is an independent work developed in a personal capacity.
-
-The views, opinions, code, and content expressed in this repository are solely my own and do not reflect the views, policies, or positions of any current or future employer, client, or affiliated organization.
-
-No employer, past, present, or future, has reviewed, approved, endorsed, or is in any way associated with these works.
-
-This project was developed outside the scope of any employment and without the use of proprietary, confidential, or restricted resources.
-
-All code/language in this repository is provided under the terms of the included MIT License.
-
-
+*Teaching operational thinking for Microsoft Security professionals.*
